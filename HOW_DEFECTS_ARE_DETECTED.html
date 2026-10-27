@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Errors Are Found</title>
+<style>
+:root{
+  --bg:#f7f7f5; --card:#ffffff; --ink:#1d1f23; --muted:#5d636e; --line:#d9dbe0;
+  --host:#2563c9; --host-bg:#e6eefb; --dev:#c2410c; --dev-bg:#fcebe0;
+  --link:#7c3aed; --link-bg:#efe8fd; --plat:#0f766e; --plat-bg:#e0f3f1;
+  --test:#6b7280; --test-bg:#eceef1; --either:#a16207; --either-bg:#fbf1d6;
+  --ok:#15803d; --ok-bg:#e3f4e8; --code:#f0f1f3; --why:#8a8f99;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171b; --card:#1d2026; --ink:#e7e9ee; --muted:#9aa1ad; --line:#343842;
+    --host:#7aa7f0; --host-bg:#1d2b44; --dev:#f2955f; --dev-bg:#3d2619;
+    --link:#b394f7; --link-bg:#2c2344; --plat:#4fc2b5; --plat-bg:#17322f;
+    --test:#a3a9b3; --test-bg:#2a2d33; --either:#e3b74e; --either-bg:#3a3018;
+    --ok:#5fcf86; --ok-bg:#183323; --code:#262a31; --why:#6b7180;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171b; --card:#1d2026; --ink:#e7e9ee; --muted:#9aa1ad; --line:#343842;
+  --host:#7aa7f0; --host-bg:#1d2b44; --dev:#f2955f; --dev-bg:#3d2619;
+  --link:#b394f7; --link-bg:#2c2344; --plat:#4fc2b5; --plat-bg:#17322f;
+  --test:#a3a9b3; --test-bg:#2a2d33; --either:#e3b74e; --either-bg:#3a3018;
+  --ok:#5fcf86; --ok-bg:#183323; --code:#262a31; --why:#6b7180;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:27px;margin:0 0 6px;line-height:1.25}
+h2{font-size:21px;margin:44px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
+h3{font-size:17px;margin:24px 0 6px}
+p{margin:6px 0 10px}
+.sub{color:var(--muted);margin:0 0 16px;max-width:820px}
+.why{color:var(--muted);border-left:3px solid var(--why);padding:2px 0 2px 10px;margin:4px 0 14px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+.read{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--host);border-radius:10px;padding:14px 16px;margin:14px 0}
+.read ul{margin:6px 0 0 20px}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+nav a{font-size:13.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);padding:4px 10px;border-radius:999px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font-size:28px;line-height:1.2}
+.kpi span{color:var(--muted);font-size:14px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:600}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-word}
+pre.row{background:var(--code);border-radius:6px;padding:8px 10px;margin:4px 0 12px;font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.cap{font-size:14.5px;margin:10px 0 2px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap;margin:1px 0}
+.h{color:var(--host);background:var(--host-bg)} .d{color:var(--dev);background:var(--dev-bg)}
+.l{color:var(--link);background:var(--link-bg)} .p{color:var(--plat);background:var(--plat-bg)}
+.t{color:var(--test);background:var(--test-bg)} .e{color:var(--either);background:var(--either-bg)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+svg .mut{fill:var(--muted)}
+svg .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+svg .arr{stroke:var(--muted);stroke-width:1.6;fill:none;marker-end:url(#ah)}
+.svgwrap{overflow-x:auto}
+.svgwrap svg{min-width:640px}
+.bar{height:22px;border-radius:5px;background:var(--host);opacity:.85}
+.ev{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6}
+.ev div{padding:3px 0;border-bottom:1px dashed var(--line)}
+.ev .ln{color:var(--muted);display:inline-block;min-width:100px}
+.root{color:var(--dev);font-weight:700} .cas{color:var(--link);font-weight:600}
+.note{color:var(--muted);font-size:14px}
+ul,ol{margin:6px 0 10px 22px;padding:0} li{margin:4px 0}
+dl.gl{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:6px 16px;margin:10px 0}
+dl.gl dt{font-weight:700} dl.gl dd{margin:0}
+@media (max-width:600px){dl.gl{grid-template-columns:1fr} dl.gl dd{margin:0 0 8px}}
+</style>
+</head>
+<body>
+<main>
+
+<h1>How the checker finds errors in the packets</h1>
+<p class="sub">A computer and an SSD (a storage drive) talk over a wire. Our checker program reads a recording of that wire. This page explains, step by step, how the checker finds what went wrong. It also shows which side caused it, and which official rule book says it is wrong. Every claim is backed by real lines from the 4 GB test recording.</p>
+
+<div class="read">
+<b>How to read this page</b>
+<ul>
+<li>Read the sections in order. Each one starts with a grey line that says why it is there.</li>
+<li>Grey boxes in a fixed-width font are real lines copied from the test recording. They are the proof.</li>
+<li>Words like PCIe, NVMe, TLP and DLLP are explained the first time they appear. All of them are also listed at the end, under "What the words mean".</li>
+</ul>
+</div>
+
+<nav>
+<a href="#s1">1 The recording</a><a href="#s2">2 Kinds of lines</a><a href="#s3">3 The checker's notes</a><a href="#s4">4 One command</a><a href="#s5">5 The 167 checks</a><a href="#s6">6 Which side</a><a href="#s7">7 The 485 errors</a><a href="#s8">8 Why it is wrong</a><a href="#s9">9 The proof</a><a href="#words">What the words mean</a>
+</nav>
+
+<div class="kpis">
+  <div class="kpi"><b>485</b><span>errors in the error list. Our generator put one copy of each into the test recording.</span></div>
+  <div class="kpi"><b>437</b><span>of the 485 were proven from the packets alone.</span></div>
+  <div class="kpi"><b>483</b><span>of the 485 were proven when the computer's own logs were added.</span></div>
+  <div class="kpi"><b>0</b><span>false alarms. The checker raised no problem in the normal traffic.</span></div>
+</div>
+<p class="note">Where these numbers come from: the final run of the checker on the 4 GB test recording (20.7 million lines). The recording and the computer logs were made by our own generator program, so the right answers are known. That is how each error could be counted as found or not found.</p>
+
+<!-- ============================================================ -->
+<h2 id="s0">The whole journey in one picture</h2>
+<p class="why">Why this part is here: it shows all the steps at once. Each later section explains one box.</p>
+
+<div class="card svgwrap">
+<svg viewBox="0 0 1000 600" role="img" aria-label="The steps from the recording to a found error">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+  </defs>
+  <rect class="box" x="10" y="20" width="210" height="120" rx="10"/>
+  <text x="115" y="48" text-anchor="middle" font-weight="700" font-size="15">1. The recording</text>
+  <text x="115" y="72" text-anchor="middle" font-size="12.5">a table file, 113 columns</text>
+  <text x="115" y="92" text-anchor="middle" font-size="12.5">one line = one packet</text>
+  <text x="115" y="112" text-anchor="middle" font-size="12" class="mut">57 columns are read</text>
+  <text x="115" y="128" text-anchor="middle" font-size="12" class="mut">(section 1 says why)</text>
+
+  <rect class="box" x="255" y="20" width="220" height="120" rx="10"/>
+  <text x="365" y="48" text-anchor="middle" font-weight="700" font-size="15">2. Sort each line</text>
+  <text x="365" y="72" text-anchor="middle" font-size="12.5">request or data packet,</text>
+  <text x="365" y="92" text-anchor="middle" font-size="12.5">receipt, training signal,</text>
+  <text x="365" y="112" text-anchor="middle" font-size="12.5">wire event, tool note</text>
+  <text x="365" y="128" text-anchor="middle" font-size="12" class="mut">(section 2)</text>
+
+  <rect class="box" x="510" y="20" width="480" height="120" rx="10"/>
+  <text x="750" y="46" text-anchor="middle" font-weight="700" font-size="15">3. Keep notes about each side</text>
+  <text x="530" y="72" font-size="12.5">• is the wire up, how fast</text>
+  <text x="530" y="92" font-size="12.5">• packets with no receipt yet</text>
+  <text x="530" y="112" font-size="12.5">• requests waiting for an answer</text>
+  <text x="760" y="72" font-size="12.5">• SSD settings and command lists</text>
+  <text x="760" y="92" font-size="12.5">• every open command</text>
+  <text x="760" y="112" font-size="12.5">• "work done" signals, data written</text>
+  <text x="750" y="132" text-anchor="middle" font-size="12" class="mut">(section 3)</text>
+
+  <path class="arr" d="M220,80 L251,80"/>
+  <path class="arr" d="M475,80 L506,80"/>
+
+  <rect class="box" x="510" y="190" width="480" height="130" rx="10"/>
+  <text x="750" y="216" text-anchor="middle" font-weight="700" font-size="15">4. Run the 167 checks</text>
+  <text x="530" y="242" font-size="12.5">98 checks: a clear break of a rule-book rule</text>
+  <text x="530" y="262" font-size="12.5">47 checks: allowed, but unusual or slow</text>
+  <text x="530" y="282" font-size="12.5">22 more: tool problems, normal actions, computer logs</text>
+  <text x="530" y="306" font-size="12" class="mut">a broken check leaves a note (section 5)</text>
+
+  <rect class="box" x="255" y="190" width="220" height="130" rx="10"/>
+  <text x="365" y="218" text-anchor="middle" font-weight="700" font-size="15">5. Group into problems</text>
+  <text x="365" y="242" text-anchor="middle" font-size="12.5">6,529 notes → 544 problems</text>
+  <text x="365" y="264" text-anchor="middle" font-size="12.5">first packet that went wrong</text>
+  <text x="365" y="284" text-anchor="middle" font-size="12.5">+ the follow-on breaks</text>
+  <text x="365" y="306" text-anchor="middle" font-size="12" class="mut">from line X to line Y</text>
+
+  <rect class="box" x="10" y="190" width="210" height="130" rx="10"/>
+  <text x="115" y="218" text-anchor="middle" font-weight="700" font-size="15">6. Which side?</text>
+  <rect x="30" y="232" width="80" height="22" rx="11" fill="var(--host-bg)"/><text x="70" y="248" text-anchor="middle" font-size="12" fill="var(--host)" font-weight="700">Computer</text>
+  <rect x="120" y="232" width="80" height="22" rx="11" fill="var(--dev-bg)"/><text x="160" y="248" text-anchor="middle" font-size="12" fill="var(--dev)" font-weight="700">SSD</text>
+  <rect x="30" y="262" width="80" height="22" rx="11" fill="var(--link-bg)"/><text x="70" y="278" text-anchor="middle" font-size="12" fill="var(--link)" font-weight="700">Wire</text>
+  <rect x="120" y="262" width="80" height="22" rx="11" fill="var(--test-bg)"/><text x="160" y="278" text-anchor="middle" font-size="12" fill="var(--test)" font-weight="700">Test set-up</text>
+  <text x="115" y="306" text-anchor="middle" font-size="12" class="mut">who sent what (section 6)</text>
+
+  <path class="arr" d="M750,140 L750,186"/>
+  <path class="arr" d="M510,255 L479,255"/>
+  <path class="arr" d="M255,255 L224,255"/>
+
+  <rect class="box" x="10" y="370" width="210" height="110" rx="10"/>
+  <text x="115" y="398" text-anchor="middle" font-weight="700" font-size="15">7. Name the error</text>
+  <text x="115" y="422" text-anchor="middle" font-size="12.5">match with 1 of 485</text>
+  <text x="115" y="442" text-anchor="middle" font-size="12.5">entries in the error list</text>
+  <text x="115" y="464" text-anchor="middle" font-size="12" class="mut">why · usual causes · fix</text>
+
+  <rect class="box" x="255" y="370" width="220" height="110" rx="10"/>
+  <text x="365" y="398" text-anchor="middle" font-weight="700" font-size="15">8. AI reviewer</text>
+  <text x="365" y="422" text-anchor="middle" font-size="12.5">reads the same packets</text>
+  <text x="365" y="442" text-anchor="middle" font-size="12.5">agree / disagree / not sure</text>
+  <text x="365" y="464" text-anchor="middle" font-size="12" class="mut">88 checked: 51 agree, 36 not sure</text>
+
+  <rect x="510" y="370" width="230" height="110" rx="10" fill="var(--ok-bg)" stroke="var(--ok)" stroke-width="1.5"/>
+  <text x="625" y="402" text-anchor="middle" font-weight="700" font-size="16" fill="var(--ok)">437 of 485</text>
+  <text x="625" y="426" text-anchor="middle" font-size="12.5">proven from the packets</text>
+  <text x="625" y="448" text-anchor="middle" font-size="12.5">0 false alarms</text>
+
+  <rect x="760" y="370" width="230" height="110" rx="10" fill="var(--ok-bg)" stroke="var(--ok)" stroke-width="1.5"/>
+  <text x="875" y="402" text-anchor="middle" font-weight="700" font-size="16" fill="var(--ok)">483 of 485</text>
+  <text x="875" y="426" text-anchor="middle" font-size="12.5">with the computer's logs</text>
+  <text x="875" y="448" text-anchor="middle" font-size="12.5">46 more than packets alone</text>
+
+  <path class="arr" d="M115,320 L115,366"/>
+  <path class="arr" d="M220,425 L251,425"/>
+  <path class="arr" d="M475,425 L506,425"/>
+  <path class="arr" d="M740,425 L756,425"/>
+
+  <rect x="510" y="520" width="480" height="62" rx="10" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="1.5"/>
+  <text x="750" y="545" text-anchor="middle" font-weight="700" font-size="13.5">The computer's own logs (Linux kernel log, tool logs)</text>
+  <text x="750" y="566" text-anchor="middle" font-size="12" class="mut">lined up in time with the packets</text>
+  <path class="arr" d="M875,520 L875,484"/>
+</svg>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="s1">1. The recording and its 113 columns</h2>
+<p class="why">Why this part is here: everything the checker knows comes from this file. You need to know what is in it, and why the checker reads only some of it.</p>
+
+<p>A computer and an SSD talk over a wire. The wire follows the PCIe rules (the rules for how packets move on the wire). The SSD also follows the NVMe rules (the rules for how storage commands are sent and answered).</p>
+<p>A capture tool (here, a LeCroy analyzer) sits on the wire. It records every packet that goes across, in both directions. It saves the recording as a table file (a CSV file). Each line of the file is one packet. Each column holds one kind of detail about that packet, such as its time, its direction, or its type.</p>
+<p>The file has 113 columns. Most lines fill in only a few of them, because each kind of packet has its own details. Here is one real line from the test recording:</p>
+<p class="cap">Line 438 of the file. The computer (Downstream) writes a 4-byte value to the address <code>FCE01008</code>. That address is the doorbell of command list 1. (A doorbell is a number the computer writes to tell the SSD that new commands are waiting.)</p>
+<pre class="row">Packet=436 | Link Dir=Downstream | TLP Type=MWr(32) | PSN=59 | Length=1 | RequesterID=000:00:0 | Tag=0 | Address=FCE01008 | st BE=1111 | Last BE=0000 | LCRC=0xE74C1953 | DATA=4 B | Time Delta=113.000 ns | Time Stamp=0000.399962777250s</pre>
+<p class="note">Only the columns that have a value are shown. The other 99 columns of this line are empty.</p>
+
+<h3 id="cols">Why the checker reads only 57 of the 113 columns</h3>
+<p class="why">Why this part is here: a reader will ask why 56 columns are left out. Each group below gives the reason.</p>
+<p>The checker reads 57 columns. It does not read the other 56. A column is left out only when no check needs it. The table lists every group, the columns read, the columns not read, and why.</p>
+<div class="card scroll"><table>
+<tr><th>Group</th><th>Columns read</th><th>Columns not read</th><th>Why the unread ones are not needed</th></tr>
+<tr><td>Every line</td><td>Marker, Packet, Link Dir, Time Stamp (4)</td><td>Time Delta (1)</td><td>Time Delta is only the gap between two neighbouring lines. In this test recording it is the gap to the next line. The error list says some capture tools write the gap from the line above instead. It also changes when the capture tool hides lines. The checker works out every gap from Time Stamp, which means the same thing in every export.</td></tr>
+<tr><td>Kind of line</td><td>Ord.Set Type, DLLP Type, TLP Type, Link Event, Jammer Phase, Action, CXL Pkt Type (7)</td><td>Jammer Target Packet, Jammer Result Packet (2)</td><td>The checker only needs to know that the capture tool broke a packet on purpose. Which packet the tool aimed at does not help judge the SSD.</td></tr>
+<tr><td>Wire-training signals</td><td>TS Link, TS Lane, Training Control, TS Data Rate, TS Gen3 Eq Control, TS Gen3 Pre-Cursor, TS Gen3 Cursor, TS Gen3 Post-Cursor (8)</td><td>N_FTS (1)</td><td>N_FTS is about a fast wake-up from one power-saving state. None of the 167 checks uses it.</td></tr>
+<tr><td>Receipt packets</td><td>PSN, AckNak Seq Num, HdrFC, DataFC, Feature Support, CRC 16 (6)</td><td>VC ID, HdrScale, DataScale, Feature Ack (4)</td><td>An NVMe SSD uses only one channel on the wire, so the channel number (VC ID) is always 0. The two Scale columns matter only for very large amounts of free room. Feature Ack repeats what Feature Support already shows.</td></tr>
+<tr><td>Request and data packets</td><td>TC, TH, TD, EP, Attributes, AT, Length, RequesterID, Tag, CompleterID, Address, DeviceID, Register, st BE, Last BE (15)</td><td>LN, NW (2)</td><td>These two belong to features that an NVMe SSD does not use.</td></tr>
+<tr><td>Answers and messages</td><td>Cpl Status, Byte Cnt, BCM, Lwr Addr, Msg Routing, Message Code (6)</td><td>none</td><td>All are read.</td></tr>
+<tr><td>Power and timing messages</td><td>Scale (Snoop), Value (Snoop), Scale (No-Snoop), Value (No-Snoop), PTM Propagation Delay (5)</td><td>Snoop, Requirement (Snoop), No-Snoop, Requirement (No-Snoop), PTM Master Time (2 columns), PMUX Channel ID, PMUX Metadata (8)</td><td>The checker reads the waiting-time numbers it needs. The yes/no columns repeat what those numbers already say. The clock-sharing times (PTM) and the PMUX columns belong to features an NVMe SSD does not use for its work.</td></tr>
+<tr><td>Bytes and check numbers</td><td>LCRC, ECRC, DATA (3)</td><td>none</td><td>All are read. DATA holds the NVMe commands themselves.</td></tr>
+<tr><td>Side management wire (SMBus)</td><td>ARP Command, Slave Address, PEC (3)</td><td>20 columns, such as Target Address, Vendor ID and UDID Version</td><td>These describe a second, slow wire used for management, not the main wire. The checker only needs to know that this traffic happened.</td></tr>
+<tr><td>CXL</td><td>none</td><td>18 columns, such as OpCode, MESI and Poison</td><td>CXL is for a different kind of device, such as memory cards. It can share the same kind of wire. An NVMe SSD does not use it.</td></tr>
+<tr><th>Total</th><th>57</th><th>56</th><th></th></tr>
+</table></div>
+<ul>
+<li><b>Four columns must be present:</b> Packet, Time Stamp, Link Dir and TLP Type. Without them the checker cannot place, time or sort a packet, so it stops and says which column is missing.</li>
+<li><b>Any other missing column</b> is treated as empty. The checks that need it simply do not fire.</li>
+<li><b>There are no NVMe columns.</b> The NVMe commands and their "done" notes travel as bytes inside the DATA column. The checker reads those bytes to find them.</li>
+<li><b>In this test recording,</b> DATA shows only the size, such as "4 B" or "256 B". The bytes themselves are kept in a separate file next to it (the payload side file). A real capture tool can also save the bytes directly in the DATA column.</li>
+</ul>
+<p class="note">Sources: the column list in the checker's code (<code>stage1/pcie_isolate/schema.py</code>, 57 names) and the column table in <code>10_defect_isolation_engine/PRODUCTION_READINESS.md</code>, section 2.</p>
+
+<!-- ============================================================ -->
+<h2 id="s2">2. Sorting each line by its kind</h2>
+<p class="why">Why this part is here: each kind of line carries different details and needs different checks. So the checker first decides what kind of line it is reading.</p>
+
+<p>There are eight kinds of lines. The checker tests them in the order below and stops at the first one that matches.</p>
+<div class="card scroll"><table>
+<tr><th>Order</th><th>Kind of line</th><th>How the checker knows</th><th>What it is</th></tr>
+<tr><td class="n">1</td><td>Packet broken on purpose</td><td>Jammer Phase is filled in</td><td>The capture tool changed or dropped a packet on purpose, to test how the two sides react.</td></tr>
+<tr><td class="n">2</td><td>CXL traffic</td><td>CXL Pkt Type is filled in</td><td>Traffic for another kind of device. An NVMe SSD does not use it.</td></tr>
+<tr><td class="n">3</td><td>Side-wire traffic (SMBus)</td><td>ARP Command or Slave Address is filled in</td><td>Traffic on the slow management wire.</td></tr>
+<tr><td class="n">4</td><td>Request or data packet (TLP)</td><td>TLP Type is filled in</td><td>A read request, a write with data, an answer, or a message. NVMe commands travel inside these.</td></tr>
+<tr><td class="n">5</td><td>Small receipt packet (DLLP)</td><td>DLLP Type is filled in</td><td>"Arrived fine" (Ack), "arrived broken, send again" (Nak), or "I have room for more" (UpdateFC).</td></tr>
+<tr><td class="n">6</td><td>Wire-training signal (ordered set)</td><td>Ord.Set Type is filled in</td><td>Signals the two sides send while they set up or fix the wire.</td></tr>
+<tr><td class="n">7</td><td>Wire event</td><td>Link Event is filled in</td><td>Something the capture tool noticed about the wire, such as "the wire went down" or "the speed changed".</td></tr>
+<tr><td class="n">8</td><td>Capture-tool note (marker)</td><td>Marker is filled in</td><td>A note the tool or a person added. Example: "buffer wrap", which means the tool's memory filled up and some packets were lost.</td></tr>
+</table></div>
+<p><b>Why this order:</b> one line can have more than one of these columns filled in. A packet that the capture tool broke on purpose also has a TLP Type. Checking "broken on purpose", CXL and side-wire first makes sure those lines are never mistaken for normal SSD traffic. The order comes from the error list (section XII.1.1, "a minimal row classifier").</p>
+
+<h3>Real lines of each kind from the test recording</h3>
+<p class="cap">A request or data packet (TLP). Line 238: the computer writes 4 bytes into one of the SSD's main settings, at address <code>FCE00014</code>.</p>
+<pre class="row">Packet=236 | Link Dir=Downstream | TLP Type=MWr(32) | PSN=29 | Length=1 | RequesterID=000:00:0 | Tag=0 | Address=FCE00014 | st BE=1111 | Last BE=0000 | LCRC=0xD6826B5F | DATA=4 B | Time Delta=113.000 ns | Time Stamp=0000.395136460870s</pre>
+<p class="cap">A receipt that says "arrived fine" (Ack DLLP). Line 120: the SSD (Upstream) confirms that packet number 0 arrived.</p>
+<pre class="row">Packet=118 | Link Dir=Upstream | DLLP Type=ACK | AckNak Seq Num=0 | CRC 16=0xCD46 | Time Delta=218.250 ns | Time Stamp=0000.395084544500s</pre>
+<p class="cap">A receipt that says "I have room for more" (UpdateFC DLLP). Line 141: the SSD updates its room counters for requests that need an answer. HdrFC and DataFC are those running counters.</p>
+<pre class="row">Packet=139 | Link Dir=Upstream | DLLP Type=UpdateFC-NP | VC ID=0 | HdrFC=22 | DataFC=16 | CRC 16=0xB5DC | Time Delta=302.250 ns | Time Stamp=0000.395103301500s</pre>
+<p class="cap">A receipt that says "arrived broken, send again" (Nak DLLP). Line 2,573,105: the computer tells the SSD that packet 1863 was the last good one. The SSD must send again every packet after it.</p>
+<pre class="row">Packet=2573103 | Link Dir=Downstream | DLLP Type=NAK | AckNak Seq Num=1863 | CRC 16=0x027D | Time Delta=19.250 ns | Time Stamp=0135.780769126250s</pre>
+<p class="cap">A wire-training signal (TS1 ordered set). Line 10: the computer offers the four speeds it can run at.</p>
+<pre class="row">Packet=8 | Link Dir=Downstream | Ord.Set Type=TS1 | TS Link=PAD | TS Lane=PAD | N_FTS=255 | Training Control=0 0 0 0 0 0 00 | TS Data Rate=2.5 GT/s, 5.0 GT/s, 8.0 GT/s, 16.0 GT/s | Time Delta=0.000 ns | Time Stamp=0000.390881822000s</pre>
+<p class="cap">A wire event with a marker. Line 2, the first line of the recording: the SSD asks for its clock signal (CLKREQ#).</p>
+<pre class="row">Marker=Marker | Packet=0 | Link Event=CLKREQ# Asserted | Time Delta=150.398 us | Time Stamp=0000.161897042000s</pre>
+<p class="note">Line numbers count the header as line 1, so line N holds packet N − 2 in this file.</p>
+
+<!-- ============================================================ -->
+<h2 id="s3">3. The checker's notes about each side</h2>
+<p class="why">Why this part is here: the old text said the checker "keeps the protocol state of both ends". This part says what that means in plain words, and why it is needed.</p>
+
+<p>The capture tool sees both directions on the wire. The direction column (Link Dir) says who sent each packet. <b>Downstream</b> means the computer sent it. <b>Upstream</b> means the SSD sent it.</p>
+<p>One packet alone rarely proves anything. An answer is only wrong if nobody asked for it. A command is only lost if the SSD took it and never said it was done. So the checker must remember what happened before.</p>
+<p>That is why it keeps notes. For each side, it writes down what that side has sent and what it is still waiting for. Each new packet updates the notes. Then the checker compares the packet with the notes. If they do not fit the rules, a check breaks. These notes are what the old text called "protocol state" ("protocol" simply means "the rules").</p>
+
+<div class="card scroll"><table>
+<tr><th>Notes about</th><th>What the checker writes down</th><th>What the notes let it catch</th></tr>
+<tr><td>The wire itself</td><td>Is the wire up or down, how fast, how many lanes</td><td>The wire slowing down. The wire restarting again and again.</td></tr>
+<tr><td>Receipts, for each direction</td><td>The last packet number sent, which packets have no receipt yet, how many times a packet was sent again</td><td>A packet number that jumps. A packet sent 4 times and still broken. A receipt that comes too late.</td></tr>
+<tr><td>Room to send, for each direction</td><td>How much room each side said it has</td><td>One side stops making room, so traffic gets stuck.</td></tr>
+<tr><td>Requests and answers</td><td>Every open request, by its request number (Tag), with its time and expected size</td><td>An answer that did not come in time. An answer that nobody asked for. An answer of the wrong size.</td></tr>
+<tr><td>The SSD's settings area (configuration space)</td><td>The SSD's address, its on and off switches, its power state and when it changed, its time-limit setting</td><td>The computer talking to the SSD while it is asleep or still restarting.</td></tr>
+<tr><td>The SSD's main settings (NVMe registers)</td><td>Is the SSD switched on, is it ready, how long it said it may need to get ready</td><td>The SSD not getting ready in the time it promised. A fatal-error flag.</td></tr>
+<tr><td>Command lists (queues)</td><td>Where each list is, how long it is, and where the computer and the SSD are in it</td><td>A doorbell number that points past the end of the list.</td></tr>
+<tr><td>Each command</td><td>When it was sent and taken. What it asked for. How much data moved. Its done note and result.</td><td>A command that never finished. Two commands with the same number. A done note for an unknown command.</td></tr>
+<tr><td>"Work done" signals (interrupts)</td><td>Which signal belongs to which done list, and which done notes still wait for a signal</td><td>A missing signal. A signal sent to the wrong place.</td></tr>
+<tr><td>Data</td><td>A check number for the data last written to each block</td><td>Data read back that is not what was written.</td></tr>
+</table></div>
+
+<ul>
+<li><b>Where the notes come from.</b> The checker learns everything from the recording itself. It learns the SSD's address from the packet that set it. It learns where each command list is from the packets that created it. It reads the time limit for answers from the SSD's own setting (Device Control 2).</li>
+<li><b>Why a recording should start when the computer starts.</b> Then the checker sees the address and the lists being set up. If the recording starts in the middle, the checker says so. It does not blame anything it could not have known.</li>
+<li><b>Why the file is read only once.</b> The checker reads one line at a time, from start to end, and updates its notes as it goes. It never loads the whole file. So a 4 GB file needs about the same memory as a small one.</li>
+<li><b>Where this is in the code:</b> <code>stage1/pcie_isolate/engine.py</code>.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="s4">4. One command, followed packet by packet</h2>
+<p class="why">Why this part is here: it shows the notes at work on real lines. It also shows which side owns each step. Section 6 uses this to decide who caused an error.</p>
+
+<p>Every NVMe command goes through the same fixed steps on the wire. Each step is sent by one side. Here is the first command on command list 1 in the test recording. It is a normal command with no error. The SSD sends 8,192 bytes of data to the computer, so this is a read command.</p>
+
+<div class="card svgwrap">
+<svg viewBox="0 0 1000 470" role="img" aria-label="The seven steps of one command, and who sends each">
+  <defs>
+    <marker id="ahh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--host)"/></marker>
+    <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--dev)"/></marker>
+    <marker id="ahh2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--host)"/></marker>
+    <marker id="ahd2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--dev)"/></marker>
+  </defs>
+  <rect x="20" y="10" width="200" height="44" rx="8" fill="var(--host-bg)" stroke="var(--host)"/>
+  <text x="120" y="38" text-anchor="middle" font-weight="700" fill="var(--host)">COMPUTER</text>
+  <rect x="780" y="10" width="200" height="44" rx="8" fill="var(--dev-bg)" stroke="var(--dev)"/>
+  <text x="880" y="38" text-anchor="middle" font-weight="700" fill="var(--dev)">SSD</text>
+  <line x1="120" y1="54" x2="120" y2="455" stroke="var(--host)" stroke-dasharray="4 4"/>
+  <line x1="880" y1="54" x2="880" y2="455" stroke="var(--dev)" stroke-dasharray="4 4"/>
+  <path d="M124,90 L874,90" stroke="var(--host)" stroke-width="2" marker-end="url(#ahh)"/>
+  <text x="500" y="82" text-anchor="middle" font-size="13">1. Doorbell: "a new command is waiting" (line 438)</text>
+  <path d="M876,135 L126,135" stroke="var(--dev)" stroke-width="2" marker-end="url(#ahd)"/>
+  <text x="500" y="127" text-anchor="middle" font-size="13">2. Read request: fetch the command (line 441)</text>
+  <path d="M124,180 L874,180" stroke="var(--host)" stroke-width="2" marker-end="url(#ahh2)"/>
+  <text x="500" y="172" text-anchor="middle" font-size="13">3. Answer: the 64-byte command (line 443)</text>
+  <path d="M876,225 L126,225" stroke="var(--dev)" stroke-width="2" marker-end="url(#ahd2)"/>
+  <text x="500" y="217" text-anchor="middle" font-size="13">4. Data: 32 packets of 256 bytes (lines 445 to 499)</text>
+  <path d="M876,270 L126,270" stroke="var(--dev)" stroke-width="2" marker-end="url(#ahd2)"/>
+  <text x="500" y="262" text-anchor="middle" font-size="13">5. Done note: 16 bytes with the result (line 505)</text>
+  <path d="M876,315 L126,315" stroke="var(--dev)" stroke-width="2" marker-end="url(#ahd2)"/>
+  <text x="500" y="307" text-anchor="middle" font-size="13">6. "Work done, look now" signal (line 506)</text>
+  <path d="M124,360 L874,360" stroke="var(--host)" stroke-width="2" marker-end="url(#ahh2)"/>
+  <text x="500" y="352" text-anchor="middle" font-size="13">7. Doorbell: "I have read the done note" (line 509)</text>
+  <rect x="160" y="392" width="680" height="58" rx="8" fill="var(--either-bg)" stroke="var(--either)"/>
+  <text x="500" y="416" text-anchor="middle" font-size="13" font-weight="700">Blue arrows are sent by the computer. Orange arrows are sent by the SSD.</text>
+  <text x="500" y="437" text-anchor="middle" font-size="12.5">If a step is wrong or missing, the side that sends it is the first suspect.</text>
+</svg>
+</div>
+<div class="card scroll"><table>
+<tr><th>Step</th><th>Line</th><th>Sent by</th><th>What happens</th><th>What the checker writes in its notes, or checks</th></tr>
+<tr><td class="n">1</td><td class="n">438</td><td><span class="tag h">Computer</span></td><td>The computer writes the doorbell of command list 1 (address <code>FCE01008</code>). This tells the SSD that a new command is waiting.</td><td>The new doorbell value must point inside the list. The checker notes the time.</td></tr>
+<tr><td class="n">2</td><td class="n">441</td><td><span class="tag d">SSD</span></td><td>The SSD sends a read request (MRd, request number 7) to fetch the command from the computer's memory.</td><td>The checker opens a note: request 7 waits for an answer.</td></tr>
+<tr><td class="n">3</td><td class="n">443</td><td><span class="tag h">Computer</span></td><td>The computer answers request 7 with the 64-byte command (CplD, status SC = success).</td><td>Request 7 is closed. The checker reads the command's fields and opens a note for this command.</td></tr>
+<tr><td class="n">4</td><td class="n">445 to 499</td><td><span class="tag d">SSD</span></td><td>The SSD writes the data into the computer's memory: 32 packets of 256 bytes each.</td><td>The checker counts the bytes and compares them with the size the command asked for.</td></tr>
+<tr><td class="n">5</td><td class="n">505</td><td><span class="tag d">SSD</span></td><td>The SSD writes the 16-byte done note into the computer's done list.</td><td>The command note is closed. The result number in the done note is checked.</td></tr>
+<tr><td class="n">6</td><td class="n">506</td><td><span class="tag d">SSD</span></td><td>The SSD sends the "work done, look now" signal (MSI-X) to address <code>FEE01000</code>.</td><td>The signal must go to the place set up for this done list.</td></tr>
+<tr><td class="n">7</td><td class="n">509</td><td><span class="tag h">Computer</span></td><td>The computer writes the doorbell of done list 1 (address <code>FCE0100C</code>). This says it has read the done note.</td><td>The doorbell value must not go past what the SSD has written.</td></tr>
+</table></div>
+
+<p class="cap">The real lines for steps 1, 2, 3, the first data packet, and steps 5, 6 and 7:</p>
+<pre class="row">Packet=436 | Link Dir=Downstream | TLP Type=MWr(32) | PSN=59 | Length=1 | RequesterID=000:00:0 | Tag=0 | Address=FCE01008 | st BE=1111 | Last BE=0000 | LCRC=0xE74C1953 | DATA=4 B | Time Stamp=0000.399962777250s
+Packet=439 | Link Dir=Upstream | TLP Type=MRd(64) | PSN=99 | Length=16 | RequesterID=002:00:0 | Tag=7 | Address=00000004:80420000 | st BE=1111 | Last BE=1111 | LCRC=0x24084007 | Time Stamp=0000.399963743250s
+Packet=441 | Link Dir=Downstream | TLP Type=CplD | PSN=60 | Length=16 | RequesterID=002:00:0 | Tag=7 | CompleterID=000:02:4 | Cpl Status=SC | Byte Cnt=64 | BCM=0 | Lwr Addr=0x000 | LCRC=0x1945D190 | DATA=64 B | Time Stamp=0000.399964446250s
+Packet=443 | Link Dir=Upstream | TLP Type=MWr(64) | PSN=100 | Length=64 | RequesterID=002:00:0 | Tag=0 | Address=00000001:7A851000 | st BE=1111 | Last BE=1111 | LCRC=0xCF11F21C | DATA=256 B | Time Stamp=0000.400047446250s
+Packet=503 | Link Dir=Upstream | TLP Type=MWr(64) | PSN=132 | Length=4 | RequesterID=002:00:0 | Tag=0 | Address=00000004:80410000 | st BE=1111 | Last BE=1111 | LCRC=0xA339288B | DATA=16 B | Time Stamp=0000.400048917620s
+Packet=504 | Link Dir=Upstream | TLP Type=MWr(32) | PSN=133 | Length=1 | RequesterID=002:00:0 | Tag=0 | Address=FEE01000 | st BE=1111 | Last BE=0000 | LCRC=0x87EBEFE8 | DATA=4 B | Time Stamp=0000.400048960620s
+Packet=507 | Link Dir=Downstream | TLP Type=MWr(32) | PSN=61 | Length=1 | RequesterID=000:00:0 | Tag=0 | Address=FCE0100C | st BE=1111 | Last BE=0000 | LCRC=0xB5F8089B | DATA=4 B | Time Stamp=0000.400051221620s</pre>
+<p class="note">How to see who sent a line: RequesterID <code>000:00:0</code> is the computer's side of the wire, and <code>002:00:0</code> is the SSD. Link Dir says the same thing as Downstream or Upstream.</p>
+<p><b>The key idea:</b> a step can be wrong, or it can never come. Then the side that owns that step is the first suspect. For example, if step 5 never comes, the SSD took the command and never finished it. That points at the SSD.</p>
+
+<!-- ============================================================ -->
+<h2 id="s5">5. The 167 checks</h2>
+<p class="why">Why this part is here: the checks are what turn packets into broken-rule notes. A reader should know what they are and where they come from.</p>
+
+<p>A check is one rule the checker tests on the packets. When a check breaks, the checker writes a broken-rule note. The note holds the check's name, the packet, the time and a one-line reason. It also holds numbers that tie it to other notes, such as the command number.</p>
+<p>The 167 checks were written for this project. They were built from the error list and from the PCIe and NVMe rule books. No rule book contains a list called "167 rules". They come in five kinds:</p>
+<div class="card scroll"><table>
+<tr><th>Kind of check</th><th class="n">Count</th><th>Taken from a rule book?</th><th>What it does</th></tr>
+<tr><td>A clear break of a rule-book rule</td><td class="n">98</td><td>Yes</td><td>The packets do something the PCIe or NVMe rule book does not allow.</td></tr>
+<tr><td>Allowed, but unusual or slow</td><td class="n">47</td><td>No</td><td>The rule book allows it, but it is rare or slow. These checks only support a problem. They never prove one alone.</td></tr>
+<tr><td>Problems with the capture tool or the recording</td><td class="n">7</td><td>No</td><td>Lost packets, a full buffer, hidden lines, a recording that starts in the middle.</td></tr>
+<tr><td>Normal actions by the computer</td><td class="n">7</td><td>No</td><td>Such as a reset or a cancel. Kept only to explain a problem, never counted as one.</td></tr>
+<tr><td>Notes from the computer's own logs</td><td class="n">8</td><td>No</td><td>Lines from the Linux kernel log and test tools, lined up in time with the packets.</td></tr>
+</table></div>
+<p>The checks also differ in how much they need to see:</p>
+<ul>
+<li><b>One line is enough</b> (46 checks). Example: a receipt that says "arrived broken" (Nak).</li>
+<li><b>A sequence of lines is needed</b> (36 checks). Example: a request with no answer before the time limit.</li>
+<li><b>The bytes inside packets are needed</b> (74 checks). Example: two open commands with the same number.</li>
+<li><b>The whole recording is needed</b> (3 checks). Example: a wait that is far longer than usual in this recording.</li>
+<li><b>The computer's logs are needed</b> (8 checks).</li>
+</ul>
+<p><b>Why there were no false alarms:</b> only the 98 rule-book checks can confirm that something is wrong. The 47 unusual-pattern checks can only mark a problem as "suspect". The time limits are read from the recording itself, so they are not guesses. In the normal traffic of the test recording, no packet check broke at all.</p>
+<p class="note">The full list of checks is in <code>stage1/pcie_isolate/rules.py</code>.</p>
+
+<!-- ============================================================ -->
+<h2 id="s6">6. From notes to one problem, and which side caused it</h2>
+<p class="why">Why this part is here: one error usually breaks several checks. This part shows how they are joined into one problem, and how the side at fault is chosen.</p>
+
+<ol>
+<li><b>Group the notes.</b> Some notes share a number, such as the same command or the same request. Some sit close together in time. Such notes become one problem. In the test recording, 6,529 notes became 544 problems.</li>
+<li><b>Find the start.</b> The earliest note in the problem is the first packet that went wrong. That is the start of the problem.</li>
+<li><b>Mark the follow-on breaks.</b> Some later notes are known results of the first one. Example: a broken packet causes a "send again" receipt, which causes the packet to be sent again. Those are marked as follow-on breaks, so the reader looks at the cause, not the echo.</li>
+<li><b>Give the line range.</b> Each problem says "from line X to line Y" of the file, so anyone can open the file and look.</li>
+<li><b>Decide the side.</b> The checker uses the rules in the table below.</li>
+</ol>
+
+<div class="card scroll"><table>
+<tr><th>What the packets show</th><th>Side</th><th>Why</th></tr>
+<tr><td>A capture-tool note, lost lines, hidden receipt packets, or a packet broken on purpose</td><td><span class="tag t">Test set-up</span></td><td>The recording itself is incomplete. A missing packet there proves nothing.</td></tr>
+<tr><td>The done note has an error result, and the command itself is wrong. Examples: an unknown command, blocks past the end of the drive, a badly lined-up address.</td><td><span class="tag h">Computer</span></td><td>The SSD rightly refused a bad command. The computer built it wrong.</td></tr>
+<tr><td>The done note has an error result, and the command's fields are fine</td><td><span class="tag d">SSD</span></td><td>The SSD refused a good command.</td></tr>
+<tr><td>Result "command cancelled" (status 0x07) right after the computer cancelled that command</td><td><span class="tag h">Computer</span></td><td>The SSD did what the rule book says when a command is cancelled.</td></tr>
+<tr><td>Doorbell written, but the SSD never fetched the command (step 2 missing)</td><td><span class="tag d">SSD</span></td><td>The first missing step is the SSD's.</td></tr>
+<tr><td>The SSD sent a read request, but no answer came back</td><td><span class="tag p">Computer platform</span></td><td>The computer's side of the wire did not answer the SSD.</td></tr>
+<tr><td>Command fetched, but no done note until the computer gave up (step 5 missing)</td><td><span class="tag d">SSD</span></td><td>The first missing step is the SSD's.</td></tr>
+<tr><td>The first badly built packet (too long, crosses a 4 KB boundary, a field that must be empty is not)</td><td><span class="tag h">Computer</span> if Downstream, <span class="tag d">SSD</span> if Upstream</td><td>Whoever sent the badly built packet is at fault.</td></tr>
+<tr><td>"Arrived broken, send again" (Nak) sent by the computer</td><td><span class="tag d">SSD</span> sender or the wire</td><td>The computer received broken packets from the SSD.</td></tr>
+<tr><td>"Arrived broken, send again" (Nak) sent by the SSD</td><td><span class="tag h">Computer</span> sender or the wire</td><td>The SSD received broken packets from the computer.</td></tr>
+<tr><td>Broken receipts in both directions, bad signals on the wire, or the wire slowing down</td><td><span class="tag l">Wire</span></td><td>The wire itself: the connector, an adapter board, or the signal quality.</td></tr>
+<tr><td>Data was right on the wire when written, but wrong when read back</td><td><span class="tag d">SSD</span></td><td>The check numbers show the SSD changed the stored data.</td></tr>
+<tr><td>Slow commands: compare "done note to next doorbell" with "doorbell to fetch to data to done note"</td><td><span class="tag h">Computer</span> or <span class="tag d">SSD</span></td><td>Whichever side controls the longest wait.</td></tr>
+</table></div>
+
+<!-- ============================================================ -->
+<h2 id="s7">7. The 485 errors, in ten chapters</h2>
+<p class="why">Why this part is here: it shows the kinds of errors and how many were found. It also shows which side usually causes them.</p>
+
+<p>The error list has 485 entries in ten chapters. The letter in an error's name is its chapter. The number is only its place in that chapter. For example, "T-01" is entry 1 of chapter T (timeouts and time limits).</p>
+<p>Each entry is marked as one of three kinds:</p>
+<ul>
+<li><b>Seen in the packets</b> (253 entries): the error leaves a packet that breaks a rule.</li>
+<li><b>Partly seen</b> (185 entries): the packets show a sign of it, but not the cause.</li>
+<li><b>Not seen</b> (47 entries): only the computer's logs can prove it.</li>
+</ul>
+<div class="legend"><span class="tag h">Computer (software or platform)</span><span class="tag d">SSD</span><span class="tag l">Wire</span><span class="tag e">Either side</span><span class="tag t">Test set-up</span></div>
+<p class="note">"Either side" means the error list does not fix one side. The packets decide it for each problem, using the rules in section 6.</p>
+
+<div class="card scroll"><table>
+<tr><th>Chapter</th><th>What goes wrong</th><th class="n">Entries</th><th class="n">Seen / partly / not</th><th class="n">Found from packets</th><th class="n">Found with logs</th><th>Usual side</th><th>Which rule book says it is wrong</th></tr>
+<tr><td><b>X</b></td><td>Wire-level errors only the capture tool sees</td><td class="n">30</td><td class="n">25 / 5 / 0</td><td class="n">30</td><td class="n">30</td><td><span class="tag l">Wire 17</span> <span class="tag e">Either 8</span></td><td>PCIe rule book: how bits are coded, how packets are framed, wire-training signals</td></tr>
+<tr><td><b>L</b></td><td>PCIe wire and request errors</td><td class="n">40</td><td class="n">22 / 15 / 3</td><td class="n">40</td><td class="n">40</td><td><span class="tag e">Either 11</span> <span class="tag h">Computer 13</span> <span class="tag l">Wire 9</span> <span class="tag d">SSD 7</span></td><td>PCIe rule book: check numbers, receipts, sending again, answer time limits, error reports</td></tr>
+<tr><td><b>V</b></td><td>Rule breaks visible in the recording</td><td class="n">37</td><td class="n">33 / 4 / 0</td><td class="n">37</td><td class="n">37</td><td><span class="tag h">Computer 18</span> <span class="tag d">SSD 12</span></td><td>NVMe rule book: doorbells, command numbers. PCIe rule book: packet size and shape</td></tr>
+<tr><td><b>C</b></td><td>NVMe controller and computer-driver failures</td><td class="n">28</td><td class="n">20 / 8 / 0</td><td class="n">28</td><td class="n">28</td><td><span class="tag d">SSD 21</span></td><td>NVMe rule book: switching on, getting ready, fatal-error flag, shutting down. PCIe rule book: reset</td></tr>
+<tr><td><b>S</b></td><td>Errors reported with a result number (status code)</td><td class="n">93</td><td class="n">67 / 20 / 6</td><td class="n">89</td><td class="n">93</td><td><span class="tag h">Computer 57</span> <span class="tag d">SSD 21</span></td><td>NVMe rule book: the table of result numbers, event reports</td></tr>
+<tr><td><b>T</b></td><td>Timeouts and time limits</td><td class="n">51</td><td class="n">25 / 18 / 8</td><td class="n">44</td><td class="n">51</td><td><span class="tag d">SSD 24</span> <span class="tag e">Either 15</span></td><td>NVMe rule book: every command must finish, ready-time limit. PCIe rule book: answer time limits, wake-up and reset waits</td></tr>
+<tr><td><b>D</b></td><td>Silent failures: said "success" but the work was not done</td><td class="n">33</td><td class="n">15 / 16 / 2</td><td class="n">32</td><td class="n">33</td><td><span class="tag d">SSD 26</span></td><td>NVMe command rule book: freeing blocks, writing zeros, data protection</td></tr>
+<tr><td><b>P</b></td><td>Speed problems</td><td class="n">14</td><td class="n">4 / 9 / 1</td><td class="n">11</td><td class="n">13</td><td><span class="tag h">Computer 7</span> <span class="tag d">SSD 3</span></td><td>No rule-book limit. The highest possible speed is worked out from the wire speed and size limits.</td></tr>
+<tr><td><b>N</b></td><td>Failures outside the recorded wire, and newer features</td><td class="n">58</td><td class="n">27 / 19 / 12</td><td class="n">46</td><td class="n">58</td><td><span class="tag d">SSD 30</span> <span class="tag h">Computer 18</span></td><td>NVMe rule book, NVMe management rule book, PCIe feature chapters</td></tr>
+<tr><td><b>M</b></td><td>Timing, missing-evidence and cross-step failures</td><td class="n">101</td><td class="n">15 / 71 / 15</td><td class="n">80</td><td class="n">100</td><td><span class="tag t">Test set-up 34</span> <span class="tag h">Computer 29</span> <span class="tag e">Either 17</span> <span class="tag d">SSD 16</span></td><td>Mostly good testing practice from the error list. The time limits come from the rule books above.</td></tr>
+<tr><th>All</th><th></th><th class="n">485</th><th class="n">253 / 185 / 47</th><th class="n">437</th><th class="n">483</th><th colspan="2">SSD 161 · Computer 158 · Either 87 · Test set-up 40 · Wire 39</th></tr>
+</table></div>
+<p class="note">"Computer" adds the computer's software and its hardware platform. For the 544 problems in the test recording, the checker chose these sides: SSD 255, computer 208, wire 35, computer platform 18, another path 15, test set-up 12.</p>
+
+<!-- ============================================================ -->
+<h2 id="s8">8. Why each pattern is wrong, and which rule book says so</h2>
+<p class="why">Why this part is here: a broken check is only useful if you know which rule it breaks. This table links the most common patterns to their rules.</p>
+
+<p>These are the packet patterns behind most of the errors found. The rule-book part is named by what it covers, because section numbers change between editions of a rule book.</p>
+<div class="card scroll"><table>
+<tr><th>What the lines show</th><th>Why it is wrong</th><th>Rule book</th><th>Side</th></tr>
+<tr><td>A badly coded signal, a bad start-of-block mark, or a bad packet frame</td><td>The receiver could not read the bits. Each case counts as a receive error.</td><td>PCIe: how bits are coded and how packets are framed</td><td><span class="tag l">Wire</span></td></tr>
+<tr><td>The wire restarts at a lower speed or with fewer lanes</td><td>The wire should keep the speed it set up. A drop means a repair at full speed failed.</td><td>PCIe: wire start-up and repair steps</td><td><span class="tag l">Wire</span></td></tr>
+<tr><td>A packet with a bad check number (LCRC), then "send again" (Nak), then the same packet number again</td><td>The check number protects each packet. A broken packet must be refused and sent again.</td><td>PCIe: check numbers and receipts</td><td>The side that sent the Nak decides</td></tr>
+<tr><td>The same packet sent 4 times, then the wire restarts</td><td>After 4 failed tries, the rules force the wire to restart.</td><td>PCIe: the limit on sending again (REPLAY_NUM)</td><td><span class="tag l">Wire</span></td></tr>
+<tr><td>Packet numbers jump or go backwards</td><td>Packet numbers must go up by one each time.</td><td>PCIe: packet numbering</td><td>The sender</td></tr>
+<tr><td>A read request with no answer for its request number within the time limit</td><td>Every request that expects an answer must get one before the time limit. The limit is the SSD's own setting (Device Control 2).</td><td>PCIe: answer time limit (completion timeout)</td><td>The side that should answer</td></tr>
+<tr><td>An answer with a request number nobody is waiting for</td><td>An answer must match an open request.</td><td>PCIe: rules for answers, "unexpected answer"</td><td>The side that answered</td></tr>
+<tr><td>An answer that says "not supported" (UR) or "refused" (CA)</td><td>The request could not be done by the side that received it.</td><td>PCIe: answer results</td><td>Either side</td></tr>
+<tr><td>A data packet bigger than the allowed size, or crossing a 4 KB boundary</td><td>Such a packet is badly built.</td><td>PCIe: largest allowed data size (Max_Payload_Size), packet-building rules</td><td>The sender</td></tr>
+<tr><td>A doorbell value at or past the size of its list, or a doorbell for a list that does not exist</td><td>A doorbell must point to a real place in a real list.</td><td>NVMe: command-list doorbell, "invalid doorbell value" event</td><td><span class="tag h">Computer</span></td></tr>
+<tr><td>Two open commands with the same command number in one list</td><td>Each open command in a list must have its own number.</td><td>NVMe: command number, "command number already in use" result</td><td><span class="tag h">Computer</span></td></tr>
+<tr><td>A command fetched, then no done note, then the computer cancels or resets</td><td>Every command the SSD takes must get a done note. The 30-second wait is the Linux computer's own setting.</td><td>NVMe: every command finishes. Linux: 30 s wait (io_timeout)</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>A done note for a command number that is not open</td><td>A done note must answer a command the computer actually sent.</td><td>NVMe: done note, command number field</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>Result 0x80 after a command that reads blocks past the end of the drive</td><td>The computer asked for blocks the drive does not have.</td><td>NVMe command rule book: "block address out of range"</td><td><span class="tag h">Computer</span></td></tr>
+<tr><td>The SSD is switched on, but does not say "ready" within its own promised time (CAP.TO × 500 ms)</td><td>The SSD must get ready within the time it promised.</td><td>NVMe: ready-time limit (CAP.TO), switch on (CC.EN), ready flag (CSTS.RDY)</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>Reading the SSD's status shows the fatal-error flag (CFS = 1)</td><td>The SSD says it has a fatal problem inside.</td><td>NVMe: fatal-error flag</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>The SSD's second ready-time setting (CRTO) is shorter than its first (CAP.TO)</td><td>The two promised times disagree with each other.</td><td>NVMe 2.x: ready-time settings</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>A "work done" signal sent to a different number than the one set up for that done list</td><td>Each done list has its own signal number, set when the list was made.</td><td>NVMe: making a done list (interrupt number). PCIe: MSI-X signals</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>A memory address in a command that is not lined up on 4 bytes, or a badly started address list</td><td>The address that says where data goes is not allowed.</td><td>NVMe: address list rules (PRP)</td><td><span class="tag h">Computer</span></td></tr>
+<tr><td>Reading a block after freeing it returns the old data</td><td>The SSD's own setting (DLFEAT) says what a freed block must return.</td><td>NVMe command rule book: freeing blocks (Dataset Management)</td><td><span class="tag d">SSD</span></td></tr>
+<tr><td>The computer talks to the SSD within 10 ms of waking it, or within 100 ms of a reset</td><td>The SSD is not ready to answer yet.</td><td>PCIe: wake-up and reset waiting times</td><td><span class="tag h">Computer</span></td></tr>
+</table></div>
+<p class="note">Rule-book editions used: NVM Express Base 2.4, NVMe over PCIe Transport 1.4, NVM Command Set 1.3, PCI Express Base 7.0, and the Linux 7.2 computer's waiting times. Every time limit used in a run is saved with its source. So a reader can check it again against the edition that a given SSD follows.</p>
+
+<!-- ============================================================ -->
+<h2 id="s9">9. How 483 of the 485 errors were proven</h2>
+<p class="why">Why this part is here: it shows what each kind of check adds. It also says why 46 errors needed the logs and why 2 stayed unproven.</p>
+
+<p>Each line below is a separate measurement on the same recording. It shows how many of the 485 errors that set of checks finds.</p>
+<div class="card scroll"><table>
+<tr><th>Checks used</th><th>What they can see</th><th class="n">Found</th><th style="width:34%"></th></tr>
+<tr><td>One-line checks only</td><td>A single packet that breaks a rule, such as a "send again" receipt</td><td class="n">117</td><td><div class="bar" style="width:24.1%"></div></td></tr>
+<tr><td>One-line and sequence checks</td><td>Also missing or late packets, such as a request with no answer</td><td class="n">180</td><td><div class="bar" style="width:37.1%"></div></td></tr>
+<tr><td>Whole-recording checks only</td><td>Waits that are far from usual, gaps in traffic, rare packet patterns</td><td class="n">342</td><td><div class="bar" style="width:70.5%"></div></td></tr>
+<tr><td>All packet checks together</td><td>Everything above, plus the bytes inside the packets (commands, done notes, data)</td><td class="n">437</td><td><div class="bar" style="width:90.1%;background:var(--ok)"></div></td></tr>
+<tr><td>All checks plus the computer's logs</td><td>Also the Linux kernel log and test-tool logs, lined up with the packets</td><td class="n">483</td><td><div class="bar" style="width:99.6%;background:var(--ok)"></div></td></tr>
+</table></div>
+
+<ul>
+<li><b>By kind of entry.</b> The packets alone prove 251 of the 253 "seen" errors, 164 of the 185 "partly seen" ones, and 22 of the 47 "not seen" ones. With the logs, this becomes 253, 183 and 47.</li>
+<li><b>The 46 errors that needed the logs</b> come from chapters M (20), N (12), T (7), S (4), P (2) and D (1). The packets show only a sign, such as a gap or a reset. A log line at the same moment names the cause. In this test, the logs were also made by our generator.</li>
+<li><b>Error M-031 is not found:</b> a short fatal-error flag that the computer never read. The flag only shows on the wire if the computer reads the SSD's status while the flag is set. In this recording it did not.</li>
+<li><b>Error P-01 is not found:</b> the speed is lower than the wire allows. No packet breaks a rule. Proving it needs a measured normal speed of the same system to compare with.</li>
+</ul>
+
+<h3>What the proof looks like: three real problems</h3>
+<p class="why">Why this part is here: it shows what you get for each problem. That is the line range, the first bad packet, the follow-on breaks, the side and the rule.</p>
+
+<div class="card">
+<p><b>Error L-02: a broken packet is sent again.</b> Lines 3,257,986 to 3,258,081. Side: <span class="tag d">SSD</span> sender, or the wire.</p>
+<div class="ev">
+<div><span class="ln">line 3257986</span> <span class="root">START</span> The SSD sends a write packet (Upstream MWr). Its check number (LCRC) is broken. The computer's side receives it.</div>
+<div><span class="ln">line 3257992</span> <span class="cas">follow-on</span> The computer sends "arrived broken, send again" (Nak). It names packet 830 as the last good one.</div>
+<div><span class="ln">line 3257995</span> <span class="cas">follow-on</span> The SSD sends packet 831 again.</div>
+<div><span class="ln">line 3257996</span> <span class="cas">follow-on</span> The SSD sends packet 832 again.</div>
+</div>
+<p class="note">The "send again" receipt went from the computer to the SSD. So the computer received the broken packet, which came from the SSD. The SSD's sender or the wire is at fault. Rule: PCIe, check numbers and receipts.</p>
+</div>
+
+<div class="card">
+<p><b>Error V-01: a doorbell value past the end of the list.</b> Lines 6,547,325 to 6,547,345. Side: <span class="tag h">Computer</span>. The AI reviewer agreed.</p>
+<div class="ev">
+<div><span class="ln">line 6547325</span> <span class="root">START</span> The computer writes the doorbell of command list 1 with the value 1024. The list has 1024 places.</div>
+<div><span class="ln">line 6547327</span> <span class="cas">follow-on</span> The SSD reports an event: "invalid doorbell value".</div>
+<div><span class="ln">line 6547345</span> The computer's kernel log says: "nvme nvme0: Invalid Doorbell Write Value".</div>
+</div>
+<p class="note">The places are numbered 0 to 1023, so 1024 is not a real place. The write came from the computer (Downstream), so the computer's driver made the mistake. Rule: NVMe, command-list doorbell.</p>
+</div>
+
+<div class="card">
+<p><b>Error T-01: a command is sent but never finished.</b> Lines 12,669,916 to 12,907,641. Side: <span class="tag d">SSD</span>.</p>
+<div class="ev">
+<div><span class="ln">line 12669916</span> <span class="root">START</span> The SSD fetches write command number 226 from command list 3. No done note follows.</div>
+<div><span class="ln">line 12669960</span> A traffic gap of 41.55 ms while work was going on. The usual longest gap in this recording is 13 µs.</div>
+<div><span class="ln">+30.000 s</span> The computer cancels command 226 (its 30-second wait ran out).</div>
+<div><span class="ln">+60.000 s</span> The computer switches the SSD off and on. The command is still not finished.</div>
+</div>
+<p class="note">Steps 1, 2 and 3 of section 4 are there. Step 5, the done note, never comes. The first missing step belongs to the SSD. Rule: NVMe, every command the SSD takes must get a done note.</p>
+</div>
+
+<h3>Why you can trust the result</h3>
+<ul>
+<li><b>No false alarms.</b> The checker raised no problem in the normal traffic, across all 20.7 million lines.</li>
+<li><b>Every claim points at a line.</b> Each problem names its first line, its start, and each follow-on line. Anyone can open the file and look.</li>
+<li><b>Time limits come from the recording.</b> The answer time limit is read from the SSD's own setting in the recording, not guessed.</li>
+<li><b>A second opinion.</b> The AI reviewer reads only the lines of each problem and may point only at those lines. It checked 88 problems. It agreed with 51 and was not sure about 36. For 1 problem it agreed with the start but disagreed about one follow-on detail.</li>
+<li><b>Limits.</b> The checker sees only the recorded wire. It cannot see inside the SSD's program or the computer's memory. That is why 46 errors needed the logs, and 2 stayed unproven.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="words">What the words mean</h2>
+<p class="why">Why this part is here: so you can look up any word on this page without leaving it.</p>
+<dl class="gl">
+<dt>PCIe</dt><dd>The rules for how packets move on the wire between the computer and the SSD.</dd>
+<dt>NVMe</dt><dd>The rules for how the computer sends storage commands to the SSD and gets answers back.</dd>
+<dt>Rule book (specification)</dt><dd>The official document that writes down the PCIe or NVMe rules.</dd>
+<dt>Rules (protocol)</dt><dd>What each side must send, and when. "Protocol" is the technical word for these rules.</dd>
+<dt>Computer (host)</dt><dd>The computer the SSD is plugged into.</dd>
+<dt>SSD (device)</dt><dd>The storage drive being tested.</dd>
+<dt>Wire (link)</dt><dd>The connection between the computer and the SSD.</dd>
+<dt>Capture tool (analyzer)</dt><dd>The tool on the wire that records every packet. Here, a LeCroy analyzer.</dd>
+<dt>Recording (trace)</dt><dd>The list of every packet the capture tool saw, saved as a table file (CSV).</dd>
+<dt>Packet</dt><dd>One small message sent across the wire. One line of the file.</dd>
+<dt>Downstream / Upstream</dt><dd>Sent by the computer / sent by the SSD.</dd>
+<dt>Request or data packet (TLP)</dt><dd>A packet that asks for data, carries data, answers a request, or carries a message.</dd>
+<dt>Receipt packet (DLLP)</dt><dd>A small packet that says "arrived fine" (Ack), "arrived broken, send again" (Nak), or "I have room for more" (UpdateFC).</dd>
+<dt>Wire-training signal (ordered set)</dt><dd>A signal the two sides send while they set up or fix the wire.</dd>
+<dt>Check number (LCRC)</dt><dd>A number sent with each packet. The receiver uses it to see if the packet arrived broken.</dd>
+<dt>Request number (Tag)</dt><dd>The number a request carries. Its answer must carry the same number.</dd>
+<dt>Doorbell</dt><dd>A number the computer writes into the SSD to say that new commands are waiting, or that it has read a done note.</dd>
+<dt>Command list (queue)</dt><dd>A list in the computer's memory where commands wait their turn. Command list = submission queue. Done list = completion queue.</dd>
+<dt>Command (SQE)</dt><dd>One 64-byte instruction to the SSD, such as "read these blocks".</dd>
+<dt>Done note (CQE)</dt><dd>A 16-byte note from the SSD that says a command finished, with a result number. 0 means success.</dd>
+<dt>"Work done" signal (MSI-X)</dt><dd>A short write from the SSD that tells the computer to look at its done list now.</dd>
+<dt>The checker</dt><dd>Our program that reads the recording and runs the 167 checks. The app screens call it "the analyser".</dd>
+<dt>Check</dt><dd>One rule the checker tests on the packets.</dd>
+<dt>Broken-rule note (finding)</dt><dd>What the checker writes when a check breaks at a packet.</dd>
+<dt>Problem (incident)</dt><dd>Broken-rule notes that belong together, with a first line and a last line.</dd>
+<dt>Follow-on break</dt><dd>A later broken rule that was caused by the first one.</dd>
+<dt>Error list</dt><dd>The list of 485 known errors, with why each happens and how to fix it. The app screens call it "the catalogue".</dd>
+<dt>AI reviewer</dt><dd>An AI program that reads the same lines and says agree, disagree or not sure.</dd>
+<dt>The computer's logs (host evidence)</dt><dd>Messages the computer wrote itself, such as the Linux kernel log (dmesg).</dd>
+<dt>False alarm</dt><dd>A problem raised where nothing was wrong.</dd>
+</dl>
+
+<div class="card" id="catalogue-legend">
+<b>How to read an error name such as T-42 or M-020</b>
+<p>The letter is the chapter of the error list. The number is only the place in that chapter. It has no other meaning. On the app screens the name is always written out in full. For example: "error type T-42 (chapter T = timeouts and time limits, entry 42): D3hot→D0 transition: access before the 10 ms recovery time".</p>
+<div class="scroll"><table>
+<tr><th>Letter</th><th>Chapter</th></tr>
+<tr><td>S</td><td>errors reported with a result number (status code)</td></tr>
+<tr><td>T</td><td>timeouts and time limits</td></tr>
+<tr><td>D</td><td>silent failures: said "success" but the work was not done</td></tr>
+<tr><td>L</td><td>PCIe wire and request errors</td></tr>
+<tr><td>C</td><td>NVMe controller and computer-driver failures</td></tr>
+<tr><td>X</td><td>wire-level errors only the capture tool sees</td></tr>
+<tr><td>V</td><td>rule breaks visible in the recording</td></tr>
+<tr><td>P</td><td>speed problems</td></tr>
+<tr><td>M</td><td>timing, missing-evidence and cross-step failures</td></tr>
+<tr><td>N</td><td>failures outside the recorded wire</td></tr>
+</table></div>
+<p>On the app screens, problems are numbered "Defect 1, Defect 2" and so on, in the order the checker met them in the recording. The internal record name (such as INC-0001) is not shown there.</p>
+</div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requirements Traceability</title>
+<style>
+:root{
+  --bg:#f6f6f3; --card:#fff; --ink:#1c1e22; --muted:#5c626d; --line:#dadce1; --code:#eff0f2;
+  --met:#15803d; --met-bg:#e2f3e7; --bench:#b45309; --bench-bg:#fcefd9;
+  --part:#be123c; --part-bg:#fce7ec;
+  --deploy:#2563c9; --deploy-bg:#e5edfb; --base:#6b21a8; --base-bg:#f1e6fa; --accent:#334155;
+  --why-bg:#eef1f5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#14161a; --card:#1c1f25; --ink:#e6e8ec; --muted:#9aa0ab; --line:#333741; --code:#262a31;
+    --met:#5fcf86; --met-bg:#173222; --bench:#f0a95a; --bench-bg:#3a2a14;
+    --part:#f47a95; --part-bg:#3d1620;
+    --deploy:#7aa7f0; --deploy-bg:#1c2a43; --base:#c99af2; --base-bg:#2e2040; --accent:#cbd5e1;
+    --why-bg:#22272f;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#14161a; --card:#1c1f25; --ink:#e6e8ec; --muted:#9aa0ab; --line:#333741; --code:#262a31;
+  --met:#5fcf86; --met-bg:#173222; --bench:#f0a95a; --bench-bg:#3a2a14;
+  --part:#f47a95; --part-bg:#3d1620;
+  --deploy:#7aa7f0; --deploy-bg:#1c2a43; --base:#c99af2; --base-bg:#2e2040; --accent:#cbd5e1;
+  --why-bg:#22272f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:19px;margin:44px 0 12px;padding-top:12px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2 .num{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;border-radius:8px;background:var(--accent);color:var(--bg);font-size:14px}
+p{margin:6px 0 10px}
+.sub{color:var(--muted);margin:0 0 16px;max-width:860px}
+.why{background:var(--why-bg);color:var(--ink);border-left:4px solid var(--accent);border-radius:6px;padding:8px 12px;margin:0 0 14px;max-width:900px;font-size:14px}
+.why b{color:var(--ink)}
+.howto{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--deploy);border-radius:12px;padding:12px 16px;margin:14px 0}
+.howto ul{margin:6px 0 0;padding-left:20px}
+.howto li{margin:3px 0}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+nav a{font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);padding:4px 10px;border-radius:999px}
+nav a:hover{border-color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;border-top:4px solid var(--line)}
+.kpi b{display:block;font-size:28px;line-height:1.15;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--muted);font-size:13px}
+.kpi.met{border-top-color:var(--met)} .kpi.bench{border-top-color:var(--bench)} .kpi.part{border-top-color:var(--part)} .kpi.deploy{border-top-color:var(--deploy)} .kpi.base{border-top-color:var(--base)}
+.stack{display:flex;height:16px;border-radius:8px;overflow:hidden;gap:2px;margin:6px 0 8px}
+.seg.met{background:var(--met)} .seg.bench{background:var(--bench)} .seg.part{background:var(--part)} .seg.deploy{background:var(--deploy)} .seg.base{background:var(--base)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px}
+.sw.met{background:var(--met)} .sw.bench{background:var(--bench)} .sw.part{background:var(--part)} .sw.deploy{background:var(--deploy)} .sw.base{background:var(--base)}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:10px 0}
+.def{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:12px 0}
+.chain div{flex:1 1 150px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;position:relative}
+.chain div b{display:block;font-size:14px;margin-bottom:2px}
+.chain div:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;background:var(--bg);line-height:1}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:720px}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;background:var(--bg)}
+td.req{font-weight:600;min-width:170px}
+td.st{min-width:170px}
+.pq{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:5px}
+.lbl{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:5px}
+.stx{color:var(--muted);font-size:12.5px;margin-top:4px}
+tr.row-met td:first-child{box-shadow:inset 4px 0 0 var(--met)}
+tr.row-bench td:first-child{box-shadow:inset 4px 0 0 var(--bench)}
+tr.row-part td:first-child{box-shadow:inset 4px 0 0 var(--part)}
+tr.row-deploy td:first-child{box-shadow:inset 4px 0 0 var(--deploy)}
+tr.row-base td:first-child{box-shadow:inset 4px 0 0 var(--base)}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-word}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.pill.met{color:var(--met);background:var(--met-bg)} .pill.bench{color:var(--bench);background:var(--bench-bg)}
+.pill.part{color:var(--part);background:var(--part-bg)}
+.pill.deploy{color:var(--deploy);background:var(--deploy-bg)} .pill.base{color:var(--base);background:var(--base-bg)}
+.gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.gap{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--bench);border-radius:10px;padding:12px 14px;font-size:13.5px}
+.gap.miss{border-left-color:var(--part)}
+.gt{font-weight:700;margin-bottom:4px}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+svg .mut{fill:var(--muted)}
+svg .b-met{fill:var(--met-bg);stroke:var(--met);stroke-width:1.6}
+svg .b-bench{fill:var(--bench-bg);stroke:var(--bench);stroke-width:1.6}
+svg .b-part{fill:var(--part-bg);stroke:var(--part);stroke-width:1.6}
+svg .b-deploy{fill:var(--deploy-bg);stroke:var(--deploy);stroke-width:1.6}
+svg .b-plain{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+svg .ar{stroke:var(--muted);stroke-width:1.7;fill:none;marker-end:url(#a)}
+svg .arg{stroke:var(--met);stroke-width:1.8;fill:none;marker-end:url(#ag)}
+svg .arr{stroke:#c2410c;stroke-width:1.8;fill:none;marker-end:url(#ar)}
+.svgwrap{overflow-x:auto}
+.svgwrap svg{min-width:640px}
+.note{color:var(--muted);font-size:13px}
+footer{margin-top:40px;color:var(--muted);font-size:12.5px}
+
+
+.read{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--deploy);border-radius:12px;padding:14px 18px;margin:14px 0}
+.read ul{margin:6px 0 0 20px} .read li{margin:4px 0}
+.minute{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--met);border-radius:12px;padding:14px 18px;margin:14px 0}
+.minute ul{margin:6px 0 0 20px} .minute li{margin:4px 0}
+.ask{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.ask.st-done{border-left-color:var(--met)} .ask.st-bench{border-left-color:var(--bench)} .ask.st-part{border-left-color:var(--part)}
+.ask.st-site{border-left-color:var(--deploy)} .ask.st-num{border-left-color:var(--base)}
+.ask-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 10px}
+.ask-head h3{margin:0;font-size:16.5px;flex:1 1 320px;line-height:1.35}
+.anum{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:34px}
+.pill.done{color:var(--met);background:var(--met-bg)} .pill.bench{color:var(--bench);background:var(--bench-bg)}
+.pill.part{color:var(--part);background:var(--part-bg)} .pill.site{color:var(--deploy);background:var(--deploy-bg)} .pill.num{color:var(--base);background:var(--base-bg)}
+.quote{color:var(--muted);font-size:14px;margin:6px 0 8px}
+.quote q{font-style:italic}
+.blk{margin:8px 0 0}
+.bl{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.blk ul{margin:3px 0 0 20px;padding:0} .blk li{margin:3px 0}
+.b-miss .bl{color:var(--part)}
+.anote{font-size:14.5px;background:var(--bg);border-radius:8px;padding:8px 10px;margin:10px 0 0}
+details.eng{margin:10px 0 0;font-size:13.5px;color:var(--muted)}
+details.eng summary{cursor:pointer}
+details.eng p{margin:6px 0 0}
+.plain-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.plain-list .item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--bench);border-radius:10px;padding:12px 14px;font-size:14.5px}
+.plain-list .item b{display:block;margin-bottom:4px}
+dl.gl{display:grid;grid-template-columns:minmax(140px,200px) 1fr;gap:6px 16px;margin:10px 0}
+dl.gl dt{font-weight:700} dl.gl dd{margin:0}
+@media (max-width:600px){dl.gl{grid-template-columns:1fr} dl.gl dd{margin:0 0 8px}}
+</style>
+</head>
+<body>
+<main>
+<h1>What the project asked for, and what we built</h1>
+<p class="sub">Someone wrote a short statement that says what this project must build. This page goes through it, one ask at a time. For each ask it says what we built, how we know it works, and what is still missing. Dated 2026-10-26.</p>
+<div class="minute"><b>The answer in one minute</b><ul><li><b>30 of 50 asks</b> are done and checked on this project's own data.</li><li><b>13 asks</b> are done, but tried only on the practice set-up (a test machine made of software). They still need a real SSD in a real lab.</li><li><b>4 asks</b> are partly done. The cards say which part is missing.</li><li><b>2 asks</b> are left for your site to connect, and <b>1</b> needs one number from your team.</li><li>Three big things are left for you. Connect a real lab machine. Match the VIAVI column names once. Type in how long your team takes by hand.</li></ul></div>
+<div class="kpis">
+<div class="kpi"><b>50</b><span>asks on this page</span></div>
+<div class="kpi met"><b>30</b><span>Done and checked</span></div>
+<div class="kpi bench"><b>13</b><span>Done, practice set-up only</span></div>
+<div class="kpi part"><b>4</b><span>Partly done</span></div>
+<div class="kpi deploy"><b>2</b><span>Left for your site</span></div>
+<div class="kpi base"><b>1</b><span>Needs your numbers</span></div>
+</div>
+<div class="card"><b>All 50 asks at a glance</b><p class="why"><b>Why this bar is here:</b> each colour is one status. The longer the colour, the more asks have that status.</p><div class="stack"><div class="seg met" style="flex:30" title="Done and checked: 30"></div><div class="seg bench" style="flex:13" title="Done, practice set-up only: 13"></div><div class="seg part" style="flex:4" title="Partly done: 4"></div><div class="seg deploy" style="flex:2" title="Left for your site: 2"></div><div class="seg base" style="flex:1" title="Needs your numbers: 1"></div></div><div class="legend"><span class="lg"><i class="sw met"></i>Done and checked <b>30</b></span><span class="lg"><i class="sw bench"></i>Done, practice set-up only <b>13</b></span><span class="lg"><i class="sw part"></i>Partly done <b>4</b></span><span class="lg"><i class="sw deploy"></i>Left for your site <b>2</b></span><span class="lg"><i class="sw base"></i>Needs your numbers <b>1</b></span></div></div>
+<div class="read"><b>How to read this page</b><ul><li>Each card is one thing the statement asks for. The card number is shown on the left.</li><li>The grey line "The statement says" copies the statement's own words. The card title says the same thing in plain words.</li><li>Each card has up to three parts: <b>What we built</b>, <b>How we know it works</b>, and <b>What is still missing</b>.</li><li>The coloured label shows how far it is done. The colours are the same as in the bar above.</li><li>File names and technical method names are kept out of the cards. Open "For engineers" at the bottom of a card to see them.</li><li>Words like "the checker" and "practice set-up" are explained in "What the words mean" at the end.</li></ul></div>
+<nav><a href="#overview">The loop</a><a href="#s1">1 The problem the project must solve</a><a href="#s2">2 The solution the statement describes</a><a href="#s3">3 The final list of parts</a><a href="#s3-1">Not done</a><a href="#s4">4 The promised benefits</a><a href="#s5">5 Goals</a><a href="#s6">6 Key results the project promised to measure</a><a href="#s7">Still missing</a><a href="#s8">8 The drawing</a><a href="#s9">9 The checklist</a><a href="#words">Words</a></nav>
+<section id="overview"><h2><span class="num">0</span>The whole loop in one picture</h2><p class="why"><b>Why this part is here:</b> it shows the whole loop first, so each card below has a place in it.</p><p>Stage 1 is the checker. It finds each fault in the recording, and where it starts. Stage 2 makes the fault happen again, finds the settings that bring it out, and saves a repeat test. The knowledge base closes the loop. When the same fault comes back, its saved steps are used again, with no new search.</p><div class="card svgwrap"><svg viewBox="0 0 1000 250" role="img" aria-label="The loop from a field recording to a lab test">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--met)"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+  </defs>
+  <rect class="b-part" x="15" y="20" width="175" height="140" rx="12"/>
+  <text x="102" y="48" text-anchor="middle" font-weight="700" font-size="15">Recording in</text>
+  <text x="102" y="74" text-anchor="middle" font-size="12.5">LeCroy table file (CSV)</text>
+  <text x="102" y="94" text-anchor="middle" font-size="12.5">113 columns: done</text>
+  <text x="102" y="114" text-anchor="middle" font-size="12.5">ADK / PCMark: partly</text>
+  <text x="102" y="140" text-anchor="middle" font-size="11.5" class="mut">VIAVI: match columns once</text>
+
+  <rect class="b-met" x="215" y="20" width="175" height="140" rx="12"/>
+  <text x="302" y="48" text-anchor="middle" font-weight="700" font-size="15">Stage 1 · find it</text>
+  <text x="302" y="74" text-anchor="middle" font-size="12.5">167 checks on the packets</text>
+  <text x="302" y="94" text-anchor="middle" font-size="12.5">437 of 485 errors found</text>
+  <text x="302" y="114" text-anchor="middle" font-size="12.5">0 false alarms</text>
+  <text x="302" y="140" text-anchor="middle" font-size="11.5" class="mut">AI reviewer checks each</text>
+
+  <rect class="b-bench" x="415" y="20" width="175" height="140" rx="12"/>
+  <text x="502" y="48" text-anchor="middle" font-weight="700" font-size="15">Stage 2 · repeat it</text>
+  <text x="502" y="74" text-anchor="middle" font-size="12.5">starts from the AI's plan</text>
+  <text x="502" y="94" text-anchor="middle" font-size="12.5">two ways to pick the next try</text>
+  <text x="502" y="114" text-anchor="middle" font-size="12.5">found 28 of 30 (random: 3)</text>
+  <text x="502" y="140" text-anchor="middle" font-size="11.5" class="mut">practice set-up today</text>
+
+  <rect class="b-met" x="615" y="20" width="175" height="140" rx="12"/>
+  <text x="702" y="48" text-anchor="middle" font-weight="700" font-size="15">Repeat tests</text>
+  <text x="702" y="74" text-anchor="middle" font-size="12.5">a test file a computer runs</text>
+  <text x="702" y="94" text-anchor="middle" font-size="12.5">+ a notes file</text>
+  <text x="702" y="114" text-anchor="middle" font-size="12.5">24 of 24 made tests pass</text>
+  <text x="702" y="140" text-anchor="middle" font-size="11.5" class="mut">your site connects them</text>
+
+  <rect class="b-met" x="815" y="20" width="170" height="140" rx="12"/>
+  <text x="900" y="48" text-anchor="middle" font-weight="700" font-size="15">Knowledge base</text>
+  <text x="900" y="74" text-anchor="middle" font-size="12.5">saved steps, scores</text>
+  <text x="900" y="94" text-anchor="middle" font-size="12.5">lessons, approvals</text>
+  <text x="900" y="140" text-anchor="middle" font-size="11.5" class="mut">one database file</text>
+
+  <path class="ar" d="M190,90 L211,90"/>
+  <path class="ar" d="M390,90 L411,90"/>
+  <path class="ar" d="M590,90 L611,90"/>
+  <path class="ar" d="M790,90 L811,90"/>
+  <path class="arg" d="M900,160 L900,205 L502,205 L502,165"/>
+  <text x="700" y="230" text-anchor="middle" font-size="12.5" fill="var(--met)" font-weight="600">same fault seen again → saved steps run first, 0 search tries</text>
+</svg><div class="legend" style="margin-top:8px"><span class="lg"><i class="sw met"></i>Done and checked</span><span class="lg"><i class="sw bench"></i>Practice set-up only</span><span class="lg"><i class="sw part"></i>Partly done</span></div></div></section>
+<section id="s1"><h2><span class="num">1</span>The problem the project must solve</h2>
+<p class="why"><b>Why this part is here:</b> The statement starts by naming the problems. Each card shows how the program solves one of them.</p>
+<article class="ask st-done" id="c1-1">
+<div class="ask-head"><span class="anum">1.1</span><h3>Find each fault, and say exactly where it starts and which side caused it</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>effectively isolating defects</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Stage 1 is the checker program. It reads the recording one line at a time.</li><li>It runs 167 checks on the packets and joins the broken checks into problems.</li><li>For each problem it gives the first wrong packet, the lines it covers, and which side caused it. It also names the matching entry in the list of 485 known errors.</li><li>Each problem gets one word: Confirmed, Suspect, or Needs evidence.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>Our generator made a 4 GB test recording with 20.7 million lines. It placed 485 errors in it on purpose.</li><li>The checker found 437 of them from the packets alone, and 483 when the computer's logs were added.</li><li>It raised 0 false alarms. It opened 544 problems.</li><li>The same result came out again from the package that can be sent by mail, in 310 seconds.</li></ul></div>
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage1/pcie_isolate</code>. Screens: app steps 2 and 3. Explained in <code>HOW_DEFECTS_ARE_DETECTED.html</code> and sections 3 to 5 of <code>FINAL_WORKFLOW_AND_ALGORITHMS.html</code>. Re-run proof: <code>VERIFICATION_FROM_SCRATCH.md</code>.</p></details>
+</article>
+<article class="ask st-bench" id="c1-2">
+<div class="ask-head"><span class="anum">1.2</span><h3>Make the fault happen again in the lab, quickly</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>faster reproduction in lab environments</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Stage 2 makes a found fault happen again on purpose.</li><li>If the fault was seen before, its saved steps are run first. That needs no search at all.</li><li>A new fault starts a search from the AI's plan. One search may make up to 300 tries.</li><li>If that finds nothing, it searches once more from the chapter's standard plan. That is up to 600 tries in all.</li><li>Everything must fit inside 10 minutes.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>A fault seen before needed 0 search tries. A new fault needed 37 to 242 tries.</li><li>In a test with 30 hidden causes, the search found 28 within 600 tries. Random tries found only 3.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>It has only been tried on the practice set-up, not on a real SSD.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage2/stage2_v3.py</code>, <code>retrieval_v3.py</code>. Running saved steps first is the "regression guard"; the chapter's standard plan is the "family template". Sections 7 and 9 of <code>FINAL_WORKFLOW_AND_ALGORITHMS.html</code>. The 28 of 30 result: <code>documentation/research_and_reports/REPORT_final_implementation.md</code> section 3 (same file as <code>Database_Implmentation/claude_research_report/REPORT_final_implementation.md</code>).</p></details>
+</article>
+<article class="ask st-done" id="c1-3">
+<div class="ask-head"><span class="anum">1.3</span><h3>One program that goes from finding the fault to making it happen again</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>integrate automated PCIe trace analysis … from basic bug identification to precise failure reproduction</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>One application with five screens.</li><li>You give it the path of the recording. It finds the faults.</li><li>For each fault it gives three things. First, the steps that make it happen again. Second, a check that those steps work. Third, a test file.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>The application test passed 4 of 4.</li><li>The full live run and the screen test also passed.</li></ul></div>
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>app/</code>. Tests: <code>tests/test_app.py</code>, <code>tests/exercise_loop.py</code>, <code>tests/ui_smoke.py</code>. Proof: <code>VERIFICATION_FROM_SCRATCH.md</code>.</p></details>
+</article>
+<article class="ask st-bench" id="c1-4">
+<div class="ask-head"><span class="anum">1.4</span><h3>Look for weak spots before they fail in use</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>proactive vulnerability analysis</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>A button called "Sweep the neighbourhood". It starts from the steps that make the fault happen.</li><li>Then it changes them a little. Each time setting is tried at half and at double. Every other power state is tried. A burst of commands is made twice as long. That gives up to 15 changed versions.</li><li>If the lab machine can break packets on purpose, that is tried too.</li><li>Versions that still bring the fault out are the weak spots. The strongest ones become repeat tests.</li><li>A second button, "Generate test case", makes versions that reach the fault in a different way.</li><li>When the fixed firmware is checked, a similar but different error is added on purpose. The test must not mix the two up.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>Check B10 of the live run and check U25 of the screen test passed.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li><li>Breaking packets on purpose needs a real lab machine that offers it. On the practice set-up those versions are marked "hardware bench only".</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage2/sweep.py</code>, <code>stage2_v3._sweep</code>, <code>stage2/compose.py</code>. Packets broken on purpose are "jammer" faults; the lab machine must offer <code>inject(spec)</code> and <code>clear_faults()</code> in <code>app/bench_hook.py</code>. The similar error added on purpose is the "decoy". Sections 10.1 and 10.2 of <code>FINAL_WORKFLOW_AND_ALGORITHMS.html</code>.</p></details>
+</article>
+</section>
+<section id="s2"><h2><span class="num">2</span>The solution the statement describes</h2>
+<p class="why"><b>Why this part is here:</b> The statement says how the solution should work. Each card matches one part of that to the program.</p>
+<article class="ask st-part" id="c2-1">
+<div class="ask-head"><span class="anum">2.1</span><h3>Read recordings from capture tools such as LeCroy and VIAVI, and recognise known errors in them</h3><span class="pill part">Partly done</span></div>
+<p class="quote">The statement says: <q>pattern recognition and PCIe/Link Layer trace analysis (via tools like LeCroy and VIAVI)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The input is the LeCroy table file with 113 columns. Its header line was copied from a real file.</li><li>The checker reads every kind of line: packets, receipts, wire-training signals and wire events. It covers every level, from the wire up to the NVMe commands and the computer's logs.</li><li>It recognises an error by comparing each problem with the stored fingerprints of the 485 known errors.</li><li>There is a second kind of input. It is a result file from a Windows start-up measurement (ADK) or from a speed test (PCMark). Its unusual results become faults.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>Same as card 1.1. The result-file input passed its own application test.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>ADK and PCMark only come in as a ready-made result file. The program that reads the raw ADK log folder (boot_etl) is separate. It is not in this package.</li><li>No VIAVI file has been seen yet. Its column names must be matched once. That is left for your site.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage1/pcie_isolate/engine.py</code>, <code>rules.py</code>, <code>atlas.py</code>; <code>app/workload_import.py</code>. Column map: <code>documentation/485_errors_reference/PCIe_113_Column_Keyword_Map.csv</code>. ADK input: <code>stage1.json</code> from boot_etl. Test: <code>WorkloadArtifactTest</code> in <code>tests/test_app.py</code>.</p></details>
+</article>
+<article class="ask st-done" id="c2-2">
+<div class="ask-head"><span class="anum">2.2</span><h3>A search that learns by trying starts from the AI's plan, and keeps changing the commands and their timing</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>RL agent uses the LLM's scenario as a seed to iteratively optimize command sequences and timing parameters</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The search starts from the AI's plan. It also uses the saved steps, earlier examples from the same chapter, and the chapter's standard plan.</li><li>Each try changes something. It adds, removes, swaps, replaces or repeats a command. It changes a time a little. Or it mixes two good tries.</li><li>When a try works, it is run again several times to be sure it was not luck.</li><li>Then the steps are cut down to the fewest that still work.</li><li>There are two ways to choose the next change. The default picks the kind of change that has worked best so far. The other (PPO) learns a small choosing rule during the search. PPO is the one named in the drawing.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>Both ways were tried 24 times on the practice SSD model, with the same starting numbers.</li><li>PPO succeeded 15 times, using 166 tries in the middle case. The default succeeded 14 times, using 156 tries.</li></ul></div>
+
+<p class="anote">Neither way trains an AI model. The default stays on because it needs no tuning. Switching to PPO is one line in the settings.</p>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage2/optimizer.py</code>, <code>stage2/ppo_optimizer.py</code>; setting <code>config/app_config.json</code> → <code>stage2.optimizer</code>. Methods: the default is a bandit with Thompson sampling and Go-Explore restarts; PPO is a clipped-surrogate policy gradient with GAE; the "run again to be sure" step is a Wilson lower bound; cutting down the steps is ddmin. Results: <code>stage2/bench_optimizers_result.json</code>. Section 9 of <code>FINAL_WORKFLOW_AND_ALGORITHMS.html</code>; <code>PROVENANCE_AUDIT.md</code> section 4.</p></details>
+</article>
+<article class="ask st-done" id="c2-3">
+<div class="ask-head"><span class="anum">2.3</span><h3>Score each try by how closely it made the same fault happen</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>reward function specifically tied to the reproduction of the failure signature</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Each try gets a score from 0 to 4, plus a small extra for coming close.</li><li>3 means the checker found the same error and confirmed it. 4 means the same, with matching settings.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>Every try is judged by the same checker program that found the fault. It is never judged by a guess.</li></ul></div>
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Score: R = stage + closeness, in <code>stage2/optimizer.py</code>; judged by <code>testgen.GeneratorBench</code>.</p></details>
+</article>
+<article class="ask st-done" id="c2-4">
+<div class="ask-head"><span class="anum">2.4</span><h3>Turn the conditions that bring the fault out most strongly into test files a computer can run</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>most stressful trigger conditions … converted into executable test scripts</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>For each confirmed set of steps, three files are made. One is a notes file that says what the test promises. One is the test file itself. One is a set-up file for the lab machine.</li><li>On the faulty firmware the test must find the fault. On the fixed firmware it must find nothing.</li><li>The AI can also build changed versions. Each one says where it came from.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>All 24 made tests passed when run as normal test files.</li></ul></div>
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Code: <code>stage2/testgen.py</code>. Files: <code>suite/&lt;id&gt;/manifest.json</code>, <code>test_&lt;id&gt;.py</code> (pytest), <code>conftest.py</code>. Run one: <code>python3 -m pytest suite/&lt;id&gt;</code>.</p></details>
+</article>
+<article class="ask st-site" id="c2-5">
+<div class="ask-head"><span class="anum">2.5</span><h3>Add the new tests to the team's official set of tests</h3><span class="pill site">Left for your site</span></div>
+<p class="quote">The statement says: <q>integrated into the formal validation suite</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The tests sit in one folder that a normal test runner can run.</li><li>A test is kept only after the lab check passes. It is saved in the knowledge base with approval by two people.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Your site connects the program to your lab machine.</li><li>Your site adds the test folder to its automatic build checks.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Connection point: <code>app/bench_hook.py</code> (fio or SPDK plus the capture tool). Steps: <code>README_PACKAGE.md</code>, item 4 under "Running with a real analyzer CSV". Automatic build checks = CI.</p></details>
+</article>
+<p class="note">"Lab check" on this page means this. The steps run on the lab machine. Then the same checker must find the same fault again.</p>
+</section>
+<section id="s3"><h2><span class="num">3</span>The final list of parts</h2>
+<p class="why"><b>Why this part is here:</b> The statement ends with a short list of parts. Each card shows that the part exists.</p>
+<article class="ask st-done" id="c3-1">
+<div class="ask-head"><span class="anum">3.1</span><h3>Reading the recording automatically</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>automated trace analysis</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Stage 1, the checker program. See card 1.1.</li></ul></div>
+
+
+</article>
+<article class="ask st-done" id="c3-2">
+<div class="ask-head"><span class="anum">3.2</span><h3>First plans written by the AI</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>LLM-generated baseline scenarios</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>For each problem the AI writes a short summary with a list of steps to try.</li><li>Its answer must have a fixed shape. Code checks every packet it names.</li><li>That list of steps is where the search starts.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>On 18 problems: 0 broken answers and 0 wrong packet numbers.</li></ul></div>
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>The summary is the "digest"; its list of steps is <code>recommended_sequence</code>. Model: Haiku 5.5, answer checked against a JSON schema.</p></details>
+</article>
+<article class="ask st-done" id="c3-3">
+<div class="ask-head"><span class="anum">3.3</span><h3>Improving the steps by learning by trying</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>reinforcement-learning-based sequence optimisation</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The search of card 2.2.</li><li>The admin's decisions are also counted in the knowledge base, and they change what is shown first next time.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>The admin-feedback bandit, section 8 of <code>FINAL_WORKFLOW_AND_ALGORITHMS.html</code>.</p></details>
+</article>
+<article class="ask st-done" id="c3-4">
+<div class="ask-head"><span class="anum">3.4</span><h3>Test files a computer can run</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>executable validation scripts</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Test files and their notes files.</li><li>They are offered as downloads. The application never runs them by itself.</li></ul></div>
+
+
+</article>
+<article class="ask st-bench" id="c3-5">
+<div class="ask-head"><span class="anum">3.5</span><h3>The whole loop: fault seen in use, made again in the lab, then checked for a long time</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>closed loop from field failure → lab reproduction → long-term validation</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The checker finds the fault. Steps are made.</li><li>The lab machine runs the steps. The same checker must find the same fault again.</li><li>A repeat test is made. Next time, the knowledge base knows the fault at once.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li></ul></div>
+</article>
+</section>
+<section id="s3-1"><h2><span class="num">3.1</span>What the explained statement asks for that this package does not do</h2><p class="why"><b>Why this part is here:</b> the explained statement asks for more than the program does. This list says it plainly, so nobody thinks it is done.</p><div class="plain-list">
+<div class="item"><b>The two Windows start-up runs in the statement are not processed</b>The statement's example has two ADK runs on the same firmware: one failed (14.948 s) and one passed (13.206 s), with 106 GB of the drive in use. There is no raw ADK log in this package. The only sample is a ready-made result file (<code>data/samples/adk_stage1_sample.json</code>).</div>
+<div class="item"><b>A passing run is not used as the thing to compare against</b>For ADK, whatever boot_etl worked out is simply brought in. For PCIe recordings, the checker compares with the rule books and with what is normal in the same recording.</div>
+<div class="item"><b>Sudden jumps in the measured numbers are passed on, not used</b>Moments where a measured number jumps (change points) go into the message to the AI and into the test's notes. They are not ranked or tested.</div>
+<div class="item"><b>The search cannot change how full the drive is</b>The search can change five settings: the gap between commands, the commands in one burst, the rest time, the commands waiting at once, and the block size. It can also choose from 12 NVMe commands and 5 power states. It has no setting for how full the drive is, or for how free-space commands (trim) line up.</div>
+<div class="item"><b>Two buttons are off for work-run faults</b>"Sweep the neighbourhood" and "Generate test case" are switched off for ADK and PCMark faults, until a real lab machine runs the work.</div>
+<div class="item"><b>The work-run test is a different kind of test</b>It compares the measured number with the range seen in passing runs. It repeats 3 times. It skips itself when there is no hardware. The "above 0.9, three times" rule is not checked for it.</div>
+</div></section>
+<section id="s4"><h2><span class="num">4</span>The promised benefits</h2>
+<p class="why"><b>Why this part is here:</b> The statement promises three benefits. Each card shows what in the program gives that benefit.</p>
+<article class="ask st-bench" id="c4-1">
+<div class="ask-head"><span class="anum">4.1</span><h3>Cover more cases than one fixed starting plan would</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>higher test coverage than a static baseline scenario</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The search goes past its starting plan.</li><li>"Generate test case" adds up to three versions per error. One brings the fault out more surely. One sits right at the edge of a time limit. One reaches the fault in another way.</li><li>Each version is kept only if it really brings the fault out. It is saved next to the main test.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>The search found 28 of 30 hidden causes. Random tries found 3 of 30.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li></ul></div>
+</article>
+<article class="ask st-bench" id="c4-2">
+<div class="ask-head"><span class="anum">4.2</span><h3>Find the cause, and the weak spots around it, early</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>proactive prevention</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Examples from the same chapter give the search its start.</li><li>The fixed-firmware check adds a similar error on purpose, to be sure the test tells them apart.</li><li>For each error, the other errors the checker cannot tell apart from it are written down.</li><li>Lessons learned go into the next message to the AI.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Errors that cannot be told apart = the "ambiguity group".</p></details>
+</article>
+<article class="ask st-done" id="c4-3">
+<div class="ask-head"><span class="anum">4.3</span><h3>Less work in testing: finding, improving the steps, and making the test file are all automatic</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>efficiency in validation</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>One job runs for each admin decision.</li><li>After the admin says Correct, the order is: saved steps first, then the search, then the lab check, then the files.</li><li>The admin only judges. The admin never writes steps or tests.</li></ul></div>
+
+
+</article>
+</section>
+<section id="s5"><h2><span class="num">5</span>Goals, and setting it up</h2>
+<p class="why"><b>Why this part is here:</b> The statement lists goals, and how the system should be set up. Each card shows where a goal is met.</p>
+<article class="ask st-done" id="c5-1">
+<div class="ask-head"><span class="anum">5.1</span><h3>A system that improves itself and closes the loop</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>self-optimising framework</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Every admin decision is saved.</li><li>It updates counts of how often each saved answer was right or wrong.</li><li>The next list shown to the admin is ordered by those counts. There is no separate training step.</li></ul></div>
+
+
+</article>
+<article class="ask st-done" id="c5-2">
+<div class="ask-head"><span class="anum">5.2</span><h3>Keep checked results as a knowledge base</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>archives validated results … as a knowledge base</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>One database file holds: every change, the causes, the steps with how surely they repeat and who approved them, the tests, the lessons, and fingerprints of the recording lines.</li><li>The computer's own logs are part of the input.</li><li>Steps written by an admin are saved only after they pass a check.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Database: <code>db/knowledge.sqlite</code>.</p></details>
+</article>
+<article class="ask st-done" id="c5-3">
+<div class="ask-head"><span class="anum">5.3</span><h3>Learn from this saved history to improve test settings and work steps</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>applies RL to this historical data</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Saved steps carry counts of right and wrong, and a rating from the order the admin puts them in.</li><li>Those decide how high a saved answer is shown in a lookup.</li><li>Saved steps and examples give the search its start.</li><li>Time ranges suggested by the AI tell the timing search where to look first.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Counts: Beta–Bernoulli. Ratings: Plackett–Luce.</p></details>
+</article>
+<article class="ask st-bench" id="c5-4">
+<div class="ask-head"><span class="anum">5.4</span><h3>Less time to make SSD firmware faults happen again</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>reduces the time to reproduce SSD firmware defects</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>A fault seen before needs no search. Only its saved steps are checked, in about 26 seconds.</li><li>Saved AI answers make a second analysis faster. Stage 1 went from 53 seconds to 14.5 seconds, with no AI calls.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>The time on a real SSD must still be measured on real hardware.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Saved AI answers = the pattern cache.</p></details>
+</article>
+<article class="ask st-done" id="c5-5">
+<div class="ask-head"><span class="anum">5.5</span><h3>Improve test plans over the long term</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>refines long-term validation strategies</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Newer steps replace older ones, and the history is kept.</li><li>Retiring saved steps needs two people.</li><li>Failed checks are recorded. Each test lists where it came from.</li></ul></div>
+
+
+</article>
+<article class="ask st-done" id="c5-6">
+<div class="ask-head"><span class="anum">5.6</span><h3>Set-up: the set of tests plus the AI steps (AI first plan, then the learning search)</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Deployment: validation suite + AI pipeline (LLM seeding → RL optimisation)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>A ready-to-install package.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p><code>README_PACKAGE.md</code>.</p></details>
+</article>
+<article class="ask st-site" id="c5-7">
+<div class="ask-head"><span class="anum">5.7</span><h3>Hardware capture tools (LeCroy or VIAVI)</h3><span class="pill site">Left for your site</span></div>
+<p class="quote">The statement says: <q>hardware analyzers (LeCroy / VIAVI) for trace analysis</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The LeCroy table file is the tested input.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>A VIAVI file needs its column names matched once.</li></ul></div>
+</article>
+<article class="ask st-done" id="c5-8">
+<div class="ask-head"><span class="anum">5.8</span><h3>Test files made from the search results</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>executable test scripts converted from optimised RL sequences</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Same as card 2.4.</li></ul></div>
+
+
+</article>
+</section>
+<section id="s6"><h2><span class="num">6</span>Key results the project promised to measure</h2>
+<p class="why"><b>Why this part is here:</b> The statement names numbers the project must measure. Each card says what is measured today, and what still needs your data.</p>
+<article class="ask st-num" id="c6-1">
+<div class="ask-head"><span class="anum">6.1</span><h3>Cut the engineers' hand work on the first look at a failure by about half</h3><span class="pill num">Needs your numbers</span></div>
+<p class="quote">The statement says: <q>reduce manual engineering effort in initial log analysis through automated first-level triage by ~50 %</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The first look is automatic. 20.7 million lines became 544 problems in 310 seconds.</li><li>Each problem comes with its error-list entry, its lines, how it happens and how to fix it.</li><li>The AI reviewer checks each one. Its answers are saved, so the same question is not asked twice.</li><li>The report page shows every run against the 10-minute limit.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>The program cannot know how long your team takes by hand. Type that number (minutes per run) into the settings. Then the report also shows the saving in percent.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Report: <code>/api/kpi</code> and the Report page. Setting: <code>config/app_config.json</code> → <code>kpi.manual_triage_minutes_per_run</code>.</p></details>
+</article>
+<article class="ask st-bench" id="c6-2">
+<div class="ask-head"><span class="anum">6.2</span><h3>A fault we already know must never slip through again</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>zero regression leakage for known failure signatures</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Every checked fault gets a repeat test.</li><li>On the faulty firmware the test must find it. On the fixed firmware it must stay silent, even with a similar error present.</li><li>When a known fault comes back, it is known at once, and its test is accepted again.</li><li>The report counts slips. A slip is a known fault that came back, but whose test was not accepted again. The count must be 0.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>In the lab check, 15 of 15 tests were accepted, and 49 of 50 error-list entries could be found.</li><li>Check E4 of the live run shows 0 slips.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up. The count is measured all the time.</li></ul></div>
+</article>
+<article class="ask st-bench" id="c6-3">
+<div class="ask-head"><span class="anum">6.3</span><h3>Find faults more correctly</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>Improving defect detection accuracy</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The 167 checks of stage 1.</li></ul></div>
+<div class="blk b-proof"><div class="bl">How we know it works</div><ul><li>437 of 485 found from the packets alone. 483 of 485 with the computer's logs. 0 false alarms.</li><li>Also 0 false alarms on the clean recordings used to set the limits.</li></ul></div>
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Measured only on recordings our generator made from the 485 known errors. How correct it is on real recordings needs your own recordings.</li></ul></div>
+</article>
+<article class="ask st-done" id="c6-4">
+<div class="ask-head"><span class="anum">6.4</span><h3>People should spend as little work as possible writing tests</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>minimise manual effort in test script design and authoring</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>No test is written by hand. Each one is filled in from the checked steps.</li><li>The AI can also build tests from the saved knowledge.</li><li>The admin's work is to press one of three buttons for each suggestion.</li></ul></div>
+
+
+</article>
+</section>
+<section id="s7"><h2><span class="num">7</span>What is still missing</h2><p class="why"><b>Why this part is here:</b> it puts every limit in one place, so you know what to finish at your site.</p><div class="plain-list">
+<div class="item"><b>Real lab hardware</b>The lab machine today is a practice set-up made of software. Until <code>app/bench_hook.py</code> is filled in for your machine, "makes the fault happen again" means "on the practice set-up".</div>
+<div class="item"><b>VIAVI files</b>No VIAVI file has been seen. The tested input is the LeCroy table file with 113 columns. Match the VIAVI column names once.</div>
+<div class="item"><b>Your starting number for the 50 % result</b>The program records the timings. It needs your team's minutes per run by hand to work out the saving.</div>
+<div class="item"><b>A key for the AI</b>The AI reviewer needs your API key, or the Claude Code command line. A setting called standin runs everything without an AI, for practice runs.</div>
+<div class="item"><b>The words "RL agent"</b>The search learns while it searches, but no AI model is trained. The default way needs no training. PPO can be chosen. On the practice SSD model, 24 runs each: PPO succeeded 15 times (166 tries in the middle case), the default 14 times (156 tries). The admin's feedback is learned by counting in the knowledge base.</div>
+</div></section>
+<section id="s8"><h2><span class="num">8</span>The project's drawing of the system, box by box</h2>
+<p class="why"><b>Why this part is here:</b> The statement came with a drawing of the system. Each card explains one box or arrow of it.</p>
+<div class="card svgwrap"><svg viewBox="0 0 1000 720" role="img" aria-label="The system drawing, with how far each part is done">
+  <!-- row 1 -->
+  <rect class="b-part" x="15" y="20" width="220" height="100" rx="12"/>
+  <text x="125" y="48" text-anchor="middle" font-weight="700" font-size="14.5">What goes in</text>
+  <text x="125" y="72" text-anchor="middle" font-size="12">PCIe table file (LeCroy)</text>
+  <text x="125" y="92" text-anchor="middle" font-size="12">ADK · PCMark: partly</text>
+
+  <rect class="b-met" x="265" y="20" width="220" height="100" rx="12"/>
+  <text x="375" y="48" text-anchor="middle" font-weight="700" font-size="14.5">1. Tidy the recording</text>
+  <text x="375" y="72" text-anchor="middle" font-size="12">stage 1 reads line by line</text>
+  <text x="375" y="92" text-anchor="middle" font-size="12">writes JSON files</text>
+
+  <rect class="b-met" x="515" y="20" width="220" height="100" rx="12"/>
+  <text x="625" y="48" text-anchor="middle" font-weight="700" font-size="14.5">2. AI reviewer</text>
+  <text x="625" y="72" text-anchor="middle" font-size="12">167 checks find the faults</text>
+  <text x="625" y="92" text-anchor="middle" font-size="12">AI confirms each one</text>
+
+  <rect class="b-met" x="765" y="20" width="220" height="100" rx="12"/>
+  <text x="875" y="48" text-anchor="middle" font-weight="700" font-size="14.5">Knowledge-base lookup</text>
+  <text x="875" y="72" text-anchor="middle" font-size="12">was this fault seen</text>
+  <text x="875" y="92" text-anchor="middle" font-size="12">before? found / not found</text>
+
+  <path class="ar" d="M235,70 L261,70"/>
+  <path class="ar" d="M485,70 L511,70"/>
+  <path class="ar" d="M735,70 L761,70"/>
+
+  <!-- row 2: found / not found, both leave the lookup box -->
+  <rect class="b-met" x="515" y="170" width="220" height="80" rx="12"/>
+  <text x="625" y="196" text-anchor="middle" font-weight="700" font-size="13.5">Found: seen before</text>
+  <text x="625" y="218" text-anchor="middle" font-size="12">give back the saved steps</text>
+  <text x="625" y="236" text-anchor="middle" font-size="12">+ settings, approver, score</text>
+
+  <rect class="b-met" x="765" y="170" width="220" height="80" rx="12"/>
+  <text x="875" y="196" text-anchor="middle" font-weight="700" font-size="13.5">Not found: new fault</text>
+  <text x="875" y="218" text-anchor="middle" font-size="12">AI writes the first plan</text>
+  <text x="875" y="236" text-anchor="middle" font-size="12">web search: off by default</text>
+
+  <path class="ar" d="M840,120 L660,166"/>
+  <path class="ar" d="M875,120 L875,166"/>
+  <text x="742" y="132" text-anchor="middle" font-size="11.5" class="mut">found</text>
+  <text x="882" y="148" font-size="11.5" class="mut">not found</text>
+
+  <!-- row 3: learning-by-trying phase -->
+  <rect class="b-bench" x="265" y="300" width="720" height="140" rx="14"/>
+  <text x="285" y="324" font-weight="700" font-size="14">AI guidance · learning-by-trying phase</text>
+  <text x="965" y="324" text-anchor="end" font-size="12" fill="var(--bench)" font-weight="700">practice set-up today</text>
+  <rect class="b-plain" x="295" y="340" width="260" height="84" rx="10"/>
+  <text x="425" y="364" text-anchor="middle" font-weight="700" font-size="13.5">1. Search program</text>
+  <text x="425" y="386" text-anchor="middle" font-size="12">two ways to pick the next try</text>
+  <text x="425" y="406" text-anchor="middle" font-size="12">changes commands and timing</text>
+  <rect class="b-plain" x="695" y="340" width="260" height="84" rx="10"/>
+  <text x="825" y="364" text-anchor="middle" font-weight="700" font-size="13.5">2. Lab test machine</text>
+  <text x="825" y="386" text-anchor="middle" font-size="12">practice set-up now</text>
+  <text x="825" y="406" text-anchor="middle" font-size="12">yours, once connected</text>
+  <path class="ar" d="M555,368 L691,368"/>
+  <text x="623" y="360" text-anchor="middle" font-size="11.5" class="mut">one try</text>
+  <path class="ar" d="M695,400 L559,400"/>
+  <text x="627" y="418" text-anchor="middle" font-size="11.5" class="mut">its score</text>
+
+  <path class="ar" d="M625,250 L625,296"/>
+  <path class="ar" d="M875,250 L875,296"/>
+  <text x="750" y="282" text-anchor="middle" font-size="12" class="mut">starting plan</text>
+
+  <!-- loop rules -->
+  <rect class="b-bench" x="15" y="300" width="220" height="140" rx="12"/>
+  <text x="125" y="328" text-anchor="middle" font-weight="700" font-size="14">Loop for best settings</text>
+  <text x="125" y="356" text-anchor="middle" font-size="12">score &gt; 0.9, three times</text>
+  <text x="125" y="374" text-anchor="middle" font-size="12">in a row = best found</text>
+  <text x="125" y="402" text-anchor="middle" font-size="12">&gt; 10 min on one search</text>
+  <text x="125" y="420" text-anchor="middle" font-size="12">= stop and report</text>
+  <path class="ar" d="M265,370 L239,370"/>
+
+  <!-- row 4 -->
+  <rect class="b-met" x="15" y="490" width="220" height="100" rx="12"/>
+  <text x="125" y="520" text-anchor="middle" font-weight="700" font-size="14">Admin screens</text>
+  <text x="125" y="544" text-anchor="middle" font-size="12">five steps</text>
+  <text x="125" y="564" text-anchor="middle" font-size="12">admin judges, never writes</text>
+  <path class="ar" d="M125,440 L125,486"/>
+
+  <rect class="b-met" x="265" y="490" width="340" height="100" rx="12"/>
+  <text x="435" y="518" text-anchor="middle" font-weight="700" font-size="14" fill="var(--met)">+1 Correct (Positive Ack)</text>
+  <text x="435" y="542" text-anchor="middle" font-size="12">repeat test file is made</text>
+  <text x="435" y="562" text-anchor="middle" font-size="12">knowledge base grows, score +1</text>
+
+  <rect class="b-met" x="645" y="490" width="340" height="100" rx="12"/>
+  <text x="815" y="518" text-anchor="middle" font-weight="700" font-size="14" fill="#c2410c">−1 Failed try (Negative Ack)</text>
+  <text x="815" y="542" text-anchor="middle" font-size="12">failed try is saved, score goes down</text>
+  <text x="815" y="562" text-anchor="middle" font-size="12">search starts again, new random numbers</text>
+
+  <path class="arg" d="M235,540 L261,540"/>
+  <path class="arr" d="M125,590 L125,612 L815,612 L815,594"/>
+  <path class="arr" d="M905,490 L905,444"/>
+  <text x="915" y="472" font-size="12" fill="#c2410c" font-weight="600">start again</text>
+
+  <!-- output -->
+  <rect class="b-met" x="265" y="640" width="340" height="66" rx="12"/>
+  <text x="435" y="666" text-anchor="middle" font-weight="700" font-size="14">What comes out</text>
+  <text x="435" y="688" text-anchor="middle" font-size="12">repeat tests (suite/) · knowledge base · report</text>
+  <path class="arg" d="M435,590 L435,636"/>
+</svg><div class="legend" style="margin-top:8px"><span class="lg"><i class="sw met"></i>Done and checked</span><span class="lg"><i class="sw bench"></i>Practice set-up only</span><span class="lg"><i class="sw part"></i>Partly done</span><span class="lg"><i class="sw deploy"></i>Left for your site</span></div></div>
+<p>The cards below give each box's own label from the drawing in the grey line, and say what it means in plain words.</p>
+<article class="ask st-part" id="c8-1">
+<div class="ask-head"><span class="anum">8.1</span><h3>What goes in</h3><span class="pill part">Partly done</span></div>
+<p class="quote">The statement says: <q>Input Trace (PCIe traces, Windows ADK, PCMark etc)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The Run screen asks which kind of input you have: a capture-tool table file, or a result file from a work run (ADK or PCMark).</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>ADK and PCMark only come in as a ready-made result file. The program that reads raw ADK logs is not in this package.</li><li>VIAVI files need their columns matched once.</li></ul></div>
+</article>
+<article class="ask st-done" id="c8-2">
+<div class="ask-head"><span class="anum">8.2</span><h3>1. Tidy the recording into files the program can read</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>1. Trace Normaliser (JSON)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Stage 1 reads the recording one line at a time. It needs about the same memory for a small or a huge file.</li><li>It writes its results into a few result files.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Files: <code>incidents.json</code>, <code>incident_rows.jsonl</code>, <code>isolation.json</code>. For ADK, boot_etl does this step and its file is brought in.</p></details>
+</article>
+<article class="ask st-done" id="c8-3">
+<div class="ask-head"><span class="anum">8.3</span><h3>2. The AI looks at the unusual results</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>2. LLM (abnormalities)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The 167 checks find the unusual results. Then the AI reviewer checks each found fault.</li><li>Its answer must have a fixed shape. Code checks every packet it names. Its answers are saved for reuse.</li></ul></div>
+
+
+<p class="anote">In the drawing, the "found" and "not found" arrows leave the next box, the knowledge-base lookup. They say whether the knowledge base had a match. They are not the AI's answer.</p>
+</article>
+<article class="ask st-done" id="c8-4">
+<div class="ask-head"><span class="anum">8.4</span><h3>Look up the knowledge base. Found: give back the saved steps and settings</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Procedural Graph Lookup (meta data, defect) → found: return the stored data (procedure, params)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The knowledge base is searched in two ways at once.</li><li>"Found" means it had a match. A fault seen before gives back its saved steps, with their settings, status, approver, how surely they repeat, and feedback.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Hybrid retrieval over an event-sourced knowledge graph.</p></details>
+</article>
+<article class="ask st-done" id="c8-5">
+<div class="ask-head"><span class="anum">8.5</span><h3>Not found: the AI writes the first plan, and may search the web</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>not found → LLM generates the baseline (create params) using tools (web search)</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>"Not found" means the knowledge base had no match.</li><li>Then the AI writes the first plan. It uses the evidence, the text of the check that broke, earlier examples and lessons.</li><li>One setting lets these AI calls search the web.</li></ul></div>
+
+
+<p class="anote">Web search is off by default. Keep it off unless your lab allows calls out to the internet.</p>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Setting: <code>llm.tools = ["web_search"]</code>. With the SDK, Anthropic's own web search tool is used; with the command line, WebSearch.</p></details>
+</article>
+<article class="ask st-bench" id="c8-6">
+<div class="ask-head"><span class="anum">8.6</span><h3>The learning phase: 1. the search program, 2. the lab test machine</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>LLM Guidance (RL phase): 1. RL Agent (PPO) – search params; 2. Hardware Test Bench</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The search program starts from the AI's plan. The default way of choosing needs no training. PPO can be chosen instead. Neither trains an AI model.</li><li>The lab machine is the practice set-up today. It has a hidden cause for each fault, a recording generator, and the real checker.</li><li>Your own hardware connects through one connection file.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Connecting your hardware is work for your site.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Setting: <code>stage2.optimizer = bandit | ppo</code>. Connection file: <code>app/bench_hook.py</code>.</p></details>
+</article>
+<article class="ask st-bench" id="c8-7">
+<div class="ask-head"><span class="anum">8.7</span><h3>The loop for the best settings: above 0.9, three times in a row, is best. More than 10 minutes is a fail.</h3><span class="pill bench">Done, practice set-up only</span></div>
+<p class="quote">The statement says: <q>Loop for best params: test score &gt; 0.9 three times consecutively = optimal; &gt; 10 min (first-level triage) = fail</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Each lab run gets a score made of three yes/no checks. Was the same error found? Did the same first check break? Was it Confirmed, not just Suspect?</li><li>The score is the number of yes answers out of 3. Only 3 out of 3 is above 0.9.</li><li>So "best" means: the same error, found by the same first check, confirmed, in three lab runs in a row.</li><li>Each search may take at most 10 minutes. Then the search stops, but the lab check still finishes. The 10-minute limit is also reported for every stage 1 run.</li><li>Inside the search, a try is only accepted when it repeats often enough in 8 more runs.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li><li>Neither rule is checked for ADK or PCMark faults, because the practice set-up cannot run a Windows work run.</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Constants in <code>stage2/loop_rules.py</code>: SCORE_THRESHOLD 0.9, OPTIMAL_CONSECUTIVE 3, FIRST_LEVEL_TRIAGE_S 600. The search stop is a Wilson 95 % lower bound of at least 0.5. Status when the time runs out: <code>triage_timeout</code>.</p></details>
+</article>
+<article class="ask st-done" id="c8-8">
+<div class="ask-head"><span class="anum">8.8</span><h3>Failed (−1): the admin starts again, the failed try is saved, the score goes down</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Negative Ack (−1) → admin restarts the process, records failed trials, edge weight decreased</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The button "Record failed trial (−1) and restart".</li><li>The cause gets one more "wrong" count, so it is shown lower next time. One more technical failure is counted, and a lesson is saved.</li><li>If the button was used on a set of steps, those steps are marked as not working.</li><li>Then the search starts again with new random numbers.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Action <code>restart_failed</code>: b+1 and tb+1 on the cause, or r = 0 on the steps; attempt counter.</p></details>
+</article>
+<article class="ask st-done" id="c8-9">
+<div class="ask-head"><span class="anum">8.9</span><h3>Correct (+1): a repeat test is made, the knowledge base grows, the score goes up</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Positive Ack (+1) → 1. regression test script generation; 2. enrich PG-DB, edge weight incremented</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The button Correct.</li><li>The cause and the steps each get one more "right" count.</li><li>The test file is saved. The knowledge base gets the steps, a test entry and lessons.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Action <code>accept</code>: a+1.</p></details>
+</article>
+<article class="ask st-done" id="c8-10">
+<div class="ask-head"><span class="anum">8.10</span><h3>The admin's screens</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Admin Dashboard Control</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The application itself: the five-step screens, the decision screen, the database page, and the report with the key results.</li></ul></div>
+
+
+</article>
+<article class="ask st-done" id="c8-11">
+<div class="ask-head"><span class="anum">8.11</span><h3>What comes out</h3><span class="pill done">Done and checked</span></div>
+<p class="quote">The statement says: <q>Output</q></p>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Repeat tests in the test folder, the growing knowledge base, the report, and the key results.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Folder: <code>suite/</code>.</p></details>
+</article>
+</section>
+<section id="s9"><h2><span class="num">9</span>The checklist for accepting the work</h2>
+<p class="why"><b>Why this part is here:</b> The explained statement ends with ten items, H1 to H10, that a solution must deliver. Each card answers one item.</p>
+<article class="ask st-part" id="cH1">
+<div class="ask-head"><span class="anum">H1</span><h3>Take in an ADK run folder, a PCMark record or a PCIe recording, and pick the files that matter</h3><span class="pill part">Partly done</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>A PCIe recording is taken in, and the helper files saved next to it are found automatically.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>An ADK folder or a PCMark record is not read here. Only a ready-made result file comes in. Picking the ADK files is done by the separate boot_etl program.</li></ul></div>
+</article>
+<article class="ask st-done" id="cH2">
+<div class="ask-head"><span class="anum">H2</span><h3>Turn everything into one set of numbers, with the same memory for any file size, and never send raw bytes to an AI</h3><span class="pill done">Done and checked</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Stage 1 reads one line at a time.</li><li>The AI only sees 15 decoded lines before and after each problem, and the packet numbers it names.</li><li>The notes of each test and run say where every number came from.</li></ul></div>
+
+
+</article>
+<article class="ask st-part" id="cH3">
+<div class="ask-head"><span class="anum">H3</span><h3>Find unusual results by comparing with passing runs, rank them, and keep them easy to check</h3><span class="pill part">Partly done</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>For PCIe recordings, the checker compares with the official rule books and with what is normal in the same recording.</li><li>Problems are ranked by their error-list match.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>There is no comparison with a passing run for PCIe recordings. It could be added later.</li><li>For ADK, the comparison with passing runs is done by boot_etl and only brought in.</li></ul></div>
+</article>
+<article class="ask st-done" id="cH4">
+<div class="ask-head"><span class="anum">H4</span><h3>Make a fingerprint of each failure</h3><span class="pill done">Done and checked</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Each fingerprint holds: the error, its chapter, the first check that broke, the level, the firmware, the work, the phase and the command.</li><li>It also holds the SSD's address on the wire, the packets just before and after, and wire events.</li><li>It holds a slowness class. That class is a sensible guess from words in the check's name, and the fingerprint says so.</li><li>The fingerprint is shown on every problem page and stored in every test's notes.</li></ul></div>
+
+
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p>Built by <code>stage1_adapter.signature_of</code>; fields include <code>preceding_packets</code>, <code>following_packets</code>, <code>link_events</code>, <code>latency_class_basis</code>, <code>signature_id</code>.</p></details>
+</article>
+<article class="ask st-done" id="cH5">
+<div class="ask-head"><span class="anum">H5</span><h3>Look up the fingerprint in the knowledge base. Use the best saved steps, or else the AI's first plan</h3><span class="pill done">Done and checked</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The knowledge-base lookup, and the list shown to the admin. Saved steps are ordered by their evidence.</li></ul></div>
+
+
+</article>
+<article class="ask st-bench" id="cH6">
+<div class="ask-head"><span class="anum">H6</span><h3>Improve the steps on a lab machine with a learning search. Best at a score above 0.9, three times. Fail at 10 minutes</h3><span class="pill bench">Done, practice set-up only</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The search program of card 2.2.</li><li>During the search, each try is scored by the stage it reached plus how close it came.</li><li>The three-checks score of card 8.7 is used on the lab check. Each search has 10 minutes.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Tried only on the practice set-up.</li><li>The fingerprint match is scored in the lab check, not inside the search.</li></ul></div>
+</article>
+<article class="ask st-done" id="cH7">
+<div class="ask-head"><span class="anum">H7</span><h3>Mark −1 on failure (score down, try saved, start again) and +1 on success</h3><span class="pill done">Done and checked</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The buttons of cards 8.8 and 8.9.</li></ul></div>
+
+
+</article>
+<article class="ask st-bench" id="cH8">
+<div class="ask-head"><span class="anum">H8</span><h3>Try nearby changes to find weak spots, including broken packets when the lab machine can make them</h3><span class="pill bench">Done, practice set-up only</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The "Sweep the neighbourhood" button of card 1.4, with up to 15 versions.</li><li>When the lab machine can break packets on purpose, those versions go through the lab check too, and are saved like the others.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>Broken-packet versions are marked "hardware bench only" until a lab machine offers them.</li></ul></div>
+</article>
+<article class="ask st-bench" id="cH9">
+<div class="ask-head"><span class="anum">H9</span><h3>Make repeat test files from the strongest conditions, each with the fingerprint number, listed in the set of tests</h3><span class="pill bench">Done, practice set-up only</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>Each test's notes carry the fingerprint number.</li><li>The main path saves the shortest steps that still work. The sweep saves its 3 strongest versions.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>"Listed in the set of tests" here means the test folder. Adding it to your automatic build checks is left for your site.</li></ul></div>
+</article>
+<article class="ask st-done" id="cH10">
+<div class="ask-head"><span class="anum">H10</span><h3>Report the key results: hand work saved on the first look, and known faults slipping through (must be 0)</h3><span class="pill done">Done and checked</span></div>
+<div class="blk b-built"><div class="bl">What we built</div><ul><li>The report page shows both.</li></ul></div>
+
+<div class="blk b-miss"><div class="bl">What is still missing</div><ul><li>The saving in percent needs your team's starting minutes (card 6.1).</li></ul></div>
+<details class="eng"><summary>For engineers: where to look, and the technical names</summary><p><code>/api/kpi</code> and the Report page.</p></details>
+</article>
+</section>
+<section id="words"><h2><span class="num">?</span>What the words mean</h2><p class="why"><b>Why this part is here:</b> so you can look up any word on this page without leaving it.</p><dl class="gl">
+<dt>The statement</dt><dd>The short table, written by the person who set the project, that says what must be built.</dd>
+<dt>The checker</dt><dd>Our program that reads the recording and finds faults. Stage 1. The app screens call it "the analyser".</dd>
+<dt>Recording</dt><dd>The table file (CSV) that a capture tool saves. One line is one packet that went over the wire between the computer and the SSD.</dd>
+<dt>Fault</dt><dd>Something that went wrong. The app screens call it a defect.</dd>
+<dt>Error list</dt><dd>The list of 485 known errors, in ten chapters. The app screens call it the catalogue.</dd>
+<dt>AI reviewer</dt><dd>An AI program that reads the same packets as the checker and says agree, disagree or not sure. It also writes first plans.</dd>
+<dt>Search</dt><dd>Stage 2's program that tries many small changes to the steps, to make the fault happen again.</dd>
+<dt>Lab check</dt><dd>The steps run on the lab machine. Then the same checker must find the same fault again in the new recording.</dd>
+<dt>Practice set-up</dt><dd>A lab test machine made of software. It pretends to be an SSD with a hidden fault. It is used until a real lab machine is connected.</dd>
+<dt>Repeat test</dt><dd>A test that is run again later, to make sure an old fault has not come back. Also called a regression test.</dd>
+<dt>Firmware</dt><dd>The program inside the SSD. Faulty firmware has the fault. Fixed firmware should not.</dd>
+<dt>Knowledge base</dt><dd>The saved record of every fault, the steps that made it happen again, its tests, and every admin decision.</dd>
+<dt>Fingerprint</dt><dd>The details that tell one fault apart from all others.</dd>
+<dt>Admin</dt><dd>The person who checks each suggestion and presses Correct, Not correct, or another button.</dd>
+<dt>Key result</dt><dd>A number the project promised to measure. Also called a KPI.</dd>
+</dl></section>
+<footer>Built from <code>docs/REQUIREMENTS_TRACEABILITY.md</code> (with the corrections in <code>DOC_FIXES_APPLIED.md</code>) and the current code. Every number and status comes from those files. Only the wording and the layout are new.</footer>
+</main>
+</body>
+</html>
