@@ -78,14 +78,14 @@ svg.dia .ah{fill:var(--ln)}
 <li><a href="#s2">Every abbreviation and special word, written out</a></li>
 <li><a href="#s3">How the program is built: parts, files and the database</a></li>
 <li><a href="#s4">Step 1 · Choose the trace</a></li>
-<li><a href="#s5">Step 2 · Analyse the trace (stage 1)</a></li>
-<li><a href="#s6">Step 3 · Defects found, and the defect page</a></li>
-<li><a href="#s7">Step 4 · Reproduce and decide (stage 2): the main screen</a></li>
-<li><a href="#s8">Step 4 · "All details": every one of the 26 decisions</a></li>
+<li><a href="#s5">Steps 2 and 3 · Analyse the trace (stage 1) and the NVMe commands page</a></li>
+<li><a href="#s6">Step 4 · Defects found, and the defect page</a></li>
+<li><a href="#s7">Step 5 · Reproduce and decide (stage 2): the main screen</a></li>
+<li><a href="#s8">Step 5 · "All details": every one of the 26 decisions</a></li>
 <li><a href="#s9">What happens in the lab when you press Correct</a></li>
 <li><a href="#s10">How the database learns from your decisions (the numbers)</a></li>
 <li><a href="#s11">How the knowledge base is searched for a new defect</a></li>
-<li><a href="#s12">Step 5 · Report and tests, the Knowledge base page, Settings, Help</a></li>
+<li><a href="#s12">Step 6 · Report and tests, the Knowledge base page, Settings, Help</a></li>
 <li><a href="#s13">One defect from packets to test, with the real numbers</a></li>
 <li><a href="#s14">Why it was built this way</a></li>
 <li><a href="#s15">How a manager can check that it is correct</a></li>
@@ -111,21 +111,21 @@ svg.dia .ah{fill:var(--ln)}
 <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
 <!-- row 1: operator steps -->
 <text x="10" y="22" class="s">WHAT YOU DO ON THE SCREEN</text>
-<rect x="10" y="32" width="190" height="86" rx="8" class="b1"/><text x="22" y="56" class="t">1 Choose the trace</text><text x="22" y="76" class="s">analyzer CSV file, your name,</text><text x="22" y="92" class="s">device, host logs (optional)</text><text x="22" y="108" class="s">button: Analyse the trace</text>
-<rect x="228" y="32" width="190" height="86" rx="8" class="b1"/><text x="240" y="56" class="t">2 Analyse (stage 1)</text><text x="240" y="76" class="s">watch the progress ring</text><text x="240" y="92" class="s">7 steps, live counts</text><text x="240" y="108" class="s">button: Stop the analysis</text>
-<rect x="446" y="32" width="190" height="86" rx="8" class="b1"/><text x="458" y="56" class="t">3 Defects found</text><text x="458" y="76" class="s">one row per defect, verdict,</text><text x="458" y="92" class="s">AI reviewer's opinion</text><text x="458" y="108" class="s">button: Continue to stage 2</text>
-<rect x="664" y="32" width="210" height="86" rx="8" class="b1"/><text x="676" y="56" class="t">4 Reproduce and decide</text><text x="676" y="76" class="s">Start stage 2; for each defect:</text><text x="676" y="92" class="s">Correct / Needs changes /</text><text x="676" y="108" class="s">Not correct; 26 decisions in all</text>
-<rect x="902" y="32" width="188" height="86" rx="8" class="b1"/><text x="914" y="56" class="t">5 Report and tests</text><text x="914" y="76" class="s">time per stage, results,</text><text x="914" y="92" class="s">list of regression tests</text><text x="914" y="108" class="s">Build or refresh the report</text>
-<path d="M200 75H226" class="ln" marker-end="url(#ar)"/><path d="M418 75H444" class="ln" marker-end="url(#ar)"/><path d="M636 75H662" class="ln" marker-end="url(#ar)"/><path d="M874 75H900" class="ln" marker-end="url(#ar)"/>
+<rect x="10" y="32" width="168" height="86" rx="8" class="b1"/><text x="22" y="56" class="t">1 Choose the trace</text><text x="22" y="76" class="s">analyzer CSV file, your name,</text><text x="22" y="92" class="s">device, host logs (optional)</text><text x="22" y="108" class="s">button: Analyse the trace</text>
+<rect x="192" y="32" width="168" height="86" rx="8" class="b1"/><text x="204" y="56" class="t">2 Analyse (stage 1)</text><text x="204" y="76" class="s">watch the progress ring</text><text x="204" y="92" class="s">8 steps, live counts</text><text x="204" y="108" class="s">button: Stop the analysis</text>
+<rect x="374" y="32" width="168" height="86" rx="8" class="b1"/><text x="386" y="56" class="t">3 NVMe commands</text><text x="386" y="76" class="s">one row per kind of command:</text><text x="386" y="92" class="s">parameters, latency, errors</text><text x="386" y="108" class="s">click for each command</text>
+<rect x="556" y="32" width="168" height="86" rx="8" class="b1"/><text x="568" y="56" class="t">4 Defects found</text><text x="568" y="76" class="s">one row per defect, verdict,</text><text x="568" y="92" class="s">AI reviewer's opinion</text><text x="568" y="108" class="s">button: Continue to stage 2</text>
+<rect x="738" y="32" width="168" height="86" rx="8" class="b1"/><text x="750" y="56" class="t">5 Reproduce and decide</text><text x="750" y="76" class="s">Start stage 2; per defect:</text><text x="750" y="92" class="s">Correct / Needs changes /</text><text x="750" y="108" class="s">Not correct; 26 decisions</text>
+<rect x="920" y="32" width="168" height="86" rx="8" class="b1"/><text x="932" y="56" class="t">6 Report and tests</text><text x="932" y="76" class="s">time per stage, results,</text><text x="932" y="92" class="s">list of regression tests</text><text x="932" y="108" class="s">Build or refresh the report</text>
 <!-- row 2: backend -->
 <text x="10" y="160" class="s">WHAT THE PROGRAM DOES (PYTHON, ON THE SERVER)</text>
-<rect x="10" y="170" width="190" height="120" rx="8" class="b"/><text x="22" y="194" class="t">Check and start</text><text x="22" y="214" class="s">safe_path: file allowed?</text><text x="22" y="230" class="s">run_key: analysed before?</text><text x="22" y="246" class="s">if yes, reuse the old run</text><text x="22" y="262" class="s">if no, start a background job</text><text x="22" y="278" class="s">runs_api.start_run</text>
-<rect x="228" y="170" width="190" height="230" rx="8" class="b"/><text x="240" y="194" class="t">The analyser</text><text x="240" y="214" class="s">a read every packet, 15 trackers,</text><text x="240" y="230" class="s">  rules fire = findings</text><text x="240" y="248" class="s">b line up host logs (optional)</text><text x="240" y="266" class="s">c group findings into defects,</text><text x="240" y="282" class="s">  find its known error type,</text><text x="240" y="298" class="s">  decide who caused it (R0-R10)</text><text x="240" y="316" class="s">d reuse earlier AI verdicts</text><text x="240" y="334" class="s">e AI reviewer checks the rest</text><text x="240" y="352" class="s">f write isolation_report.md</text><text x="240" y="370" class="s">stage1_runner.run_stage1</text><text x="240" y="386" class="s">stage1/pcie_isolate/*</text>
-<rect x="446" y="170" width="190" height="120" rx="8" class="b"/><text x="458" y="194" class="t">Read the results</text><text x="458" y="214" class="s">incidents.json,</text><text x="458" y="230" class="s">isolation.json,</text><text x="458" y="246" class="s">llm_reviews.jsonl</text><text x="458" y="262" class="s">stage2_api.get_incident</text><text x="458" y="278" class="s">stage2_api.defect_record</text>
-<rect x="664" y="170" width="210" height="230" rx="8" class="b"/><text x="676" y="194" class="t">Stage 2, each defect</text><text x="676" y="214" class="s">show: search the knowledge</text><text x="676" y="230" class="s">  base (5 ways), "seen before?",</text><text x="676" y="246" class="s">  AI reviewer's proposal</text><text x="676" y="266" class="s">act: your decision becomes</text><text x="676" y="282" class="s">  events, numbers change</text><text x="676" y="302" class="s">lab job (Correct and so on):</text><text x="676" y="318" class="s">  run saved procedure again, or</text><text x="676" y="334" class="s">  search, shrink, push harder</text><text x="676" y="350" class="s">  lab check bad / fixed firmware</text><text x="676" y="366" class="s">  write the test files</text><text x="676" y="386" class="s">stage2_service, stage2_v3</text>
-<rect x="902" y="170" width="188" height="120" rx="8" class="b"/><text x="914" y="194" class="t">Collect</text><text x="914" y="214" class="s">report.build_report</text><text x="914" y="230" class="s">misc_api.kpi</text><text x="914" y="246" class="s">misc_api.suite</text><text x="914" y="262" class="s">reads runs/ and suite/</text>
-<path d="M105 118V168" class="ln" marker-end="url(#ar)"/><path d="M323 118V168" class="ln" marker-end="url(#ar)"/><path d="M541 118V168" class="ln" marker-end="url(#ar)"/><path d="M769 118V168" class="ln" marker-end="url(#ar)"/><path d="M996 118V168" class="ln" marker-end="url(#ar)"/>
-<path d="M200 230H226" class="ln" marker-end="url(#ar)"/><path d="M418 230H444" class="ln" marker-end="url(#ar)"/>
+<rect x="10" y="170" width="168" height="120" rx="8" class="b"/><text x="22" y="194" class="t">Check and start</text><text x="22" y="214" class="s">safe_path: file allowed?</text><text x="22" y="230" class="s">run_key: analysed before?</text><text x="22" y="246" class="s">if yes, reuse the old run</text><text x="22" y="262" class="s">if no, start a background job</text><text x="22" y="278" class="s">runs_api.start_run</text>
+<rect x="192" y="170" width="168" height="250" rx="8" class="b"/><text x="204" y="194" class="t">The analyser</text><text x="204" y="214" class="s">a read every packet,</text><text x="204" y="230" class="s">  15 trackers, rules = findings</text><text x="204" y="246" class="s">b line up host logs (optional)</text><text x="204" y="262" class="s">c group findings into defects</text><text x="204" y="278" class="s">  by identity, name the error</text><text x="204" y="294" class="s">  type, who caused it (R0-R10)</text><text x="204" y="310" class="s">d summarise every command</text><text x="204" y="326" class="s">e reuse earlier AI verdicts</text><text x="204" y="342" class="s">f AI reviewer checks the rest</text><text x="204" y="358" class="s">g write isolation_report.md</text><text x="204" y="374" class="s">stage1_runner.run_stage1</text><text x="204" y="390" class="s">stage1/pcie_isolate/*</text>
+<rect x="374" y="170" width="168" height="160" rx="8" class="b"/><text x="386" y="194" class="t">Summarise commands</text><text x="386" y="214" class="s">commands.jsonl: each command</text><text x="386" y="230" class="s">from doorbell to completion</text><text x="386" y="246" class="s">commands.py build():</text><text x="386" y="262" class="s">parameters, step latencies,</text><text x="386" y="278" class="s">labels with their basis,</text><text x="386" y="294" class="s">errors under each command</text><text x="386" y="310" class="s">command_summary.json</text>
+<rect x="556" y="170" width="168" height="120" rx="8" class="b"/><text x="568" y="194" class="t">Read the results</text><text x="568" y="214" class="s">incidents.json,</text><text x="568" y="230" class="s">isolation.json,</text><text x="568" y="246" class="s">llm_reviews.jsonl</text><text x="568" y="262" class="s">stage2_api.get_incident</text><text x="568" y="278" class="s">stage2_api.defect_record</text>
+<rect x="738" y="170" width="168" height="230" rx="8" class="b"/><text x="750" y="194" class="t">Stage 2, each defect</text><text x="750" y="214" class="s">show: search the knowledge</text><text x="750" y="230" class="s">  base (5 ways), seen before?,</text><text x="750" y="246" class="s">  AI reviewer's proposal</text><text x="750" y="262" class="s">act: your decision becomes</text><text x="750" y="278" class="s">  events, numbers change</text><text x="750" y="294" class="s">lab job (Correct and so on):</text><text x="750" y="310" class="s">  run saved procedure again, or</text><text x="750" y="326" class="s">  search, shrink, push harder</text><text x="750" y="342" class="s">  lab check bad / fixed firmware</text><text x="750" y="358" class="s">  write the test files</text><text x="750" y="374" class="s">stage2_service, stage2_v3</text>
+<rect x="920" y="170" width="168" height="120" rx="8" class="b"/><text x="932" y="194" class="t">Collect</text><text x="932" y="214" class="s">report.build_report</text><text x="932" y="230" class="s">misc_api.kpi</text><text x="932" y="246" class="s">misc_api.suite</text><text x="932" y="262" class="s">reads runs/ and suite/</text>
+<path d="M94 118V168" class="ln" marker-end="url(#ar)"/><path d="M276 118V168" class="ln" marker-end="url(#ar)"/><path d="M458 118V168" class="ln" marker-end="url(#ar)"/><path d="M640 118V168" class="ln" marker-end="url(#ar)"/><path d="M822 118V168" class="ln" marker-end="url(#ar)"/><path d="M1004 118V168" class="ln" marker-end="url(#ar)"/><path d="M178 230H190" class="ln" marker-end="url(#ar)"/><path d="M360 230H372" class="ln" marker-end="url(#ar)"/><path d="M542 230H554" class="ln" marker-end="url(#ar)"/>
 <!-- row 3: storage -->
 <text x="10" y="440" class="s">WHERE IT IS KEPT (FILES AND DATABASES ON DISK)</text>
 <rect x="10" y="450" width="408" height="84" rx="8" class="b3"/><text x="22" y="474" class="t">runs/&lt;run id&gt;/ (one folder per analysed trace)</text><text x="22" y="494" class="s">run.json, incidents.json, incident_rows.jsonl, llm_reviews.jsonl,</text><text x="22" y="510" class="s">isolation.json, isolation_report.md, stage2/Defect state files</text><text x="22" y="526" class="s">db/app.sqlite: jobs, progress, timings, saved AI verdicts</text>
@@ -146,7 +146,7 @@ svg.dia .ah{fill:var(--ln)}
 
 <p>Read the picture from top to bottom. The top row is what you do on the screen. The middle row is the program on the server (the main computer the app runs on). It runs when you press the button above it. The name at the bottom of each box is the Python function that does the work. Python is the language the program is written in. Later sections explain each function. The bottom row is where the result is kept. The dotted lines are the two feedback loops (paths that carry results back). Your decisions flow back into the knowledge base. Stage 1 verdicts (the AI reviewer's answers) flow back into a cache (a store of saved answers).</p>
 
-<div class="box"><h4>The five steps in the left sidebar are the five boxes of the top row</h4>
+<div class="box"><h4>The six steps in the left sidebar are the six boxes of the top row</h4>
 A step stays grey, with a lock sign, until the step before it is done. You cannot open stage 2 before stage 1 has finished. You cannot decide before you have pressed <b>Start stage 2</b>. The program forces the same order on the server too (function <code>_gate</code> in <code>app/api/stage2_api.py</code>). So typing a web address cannot skip the order either.</div>
 
 </output>
@@ -261,17 +261,18 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <tr><td>P13</td><td>controller readiness (CC / CSTS registers)</td><td>P27</td><td>capture artefacts (export, gaps, filters) [mistakes made by the recording]</td></tr>
 <tr><td>P14</td><td>queue doorbell violations</td><td>E</td><td>outside the probed PCIe link</td></tr>
 </table></div>
-<p><b>Rule names</b> such as <code>CFG.D0_EARLY</code>, <code>TLP.CPL_STATUS</code> or <code>NVME.DMA_OUTSIDE</code> name the analyser's 167 rules. The rules live in the file <code>stage1/pcie_isolate/rules.py</code>. The part before the dot is the area. The part after the dot says what is checked. So <code>CFG.D0_EARLY</code> means "configuration: access too early after D0". Here are the areas, with the number of rules in each:</p>
+<p><b>Rule names</b> such as <code>CFG.D0_EARLY</code>, <code>TLP.CPL_STATUS</code> or <code>NVME.DMA_OUTSIDE</code> name the analyser's 227 rules. The rules live in the file <code>stage1/pcie_isolate/rules.py</code>. The part before the dot is the area. The part after the dot says what is checked. So <code>CFG.D0_EARLY</code> means "configuration: access too early after D0". 60 of the rules stand for the 72 error kinds that the analyzer software itself checks (its Reports &rsaquo; Error Summary list); the file <code>stage1/pcie_isolate/analyzer_errors.py</code> gives each of those kinds its meaning, the rule of the PCI Express specification it comes from, and the places in an export where the proof can be. Here are the areas, with the number of rules in each:</p>
 <div class="tw"><table class="small">
 <tr><th>Prefix</th><th>Area</th><th>Rules</th><th>Prefix</th><th>Area</th><th>Rules</th></tr>
-<tr><td>NVME</td><td>NVMe commands, queues and answers (completions)</td><td>38</td><td>H</td><td>host evidence (dmesg, host tool records)</td><td>8</td></tr>
-<tr><td>TLP</td><td>work packets (types, fields, status)</td><td>19</td><td>CI</td><td>whether the recording is whole (gaps, filters, markers)</td><td>7</td></tr>
-<tr><td>PHY</td><td>the wires and signals (symbols, receiver)</td><td>16</td><td>LINK</td><td>link training and link state</td><td>7</td></tr>
-<tr><td>REG</td><td>the drive's registers (CC, CSTS …)</td><td>13</td><td>PM</td><td>power saving</td><td>6</td></tr>
-<tr><td>TXN</td><td>matching each request with its answer</td><td>12</td><td>DB</td><td>doorbells</td><td>5</td></tr>
-<tr><td>CFG</td><td>configuration space (the settings area)</td><td>12</td><td>DATA</td><td>whether the data stays correct</td><td>5</td></tr>
-<tr><td>DLL</td><td>data link (ACK, NAK, sending packets again)</td><td>9</td><td>FC, MSG</td><td>flow control; PCIe messages</td><td>3 + 3</td></tr>
-<tr><td>S</td><td>counts over the whole trace (for example S.RARE_WINDOW: rare kinds of packet bunched together in a short time)</td><td>3</td><td>SMBUS</td><td>sideband management bus (a small extra wire for management messages)</td><td>1</td></tr>
+<tr><td>PHY</td><td>the wires and signals (symbols, framing, training sets, ordered sets)</td><td>43</td><td>H</td><td>host evidence (dmesg, host tool records)</td><td>8</td></tr>
+<tr><td>NVME</td><td>NVMe commands, queues and answers (completions)</td><td>38</td><td>CI</td><td>whether the recording is whole (gaps, filters, markers, analyzer flags)</td><td>8</td></tr>
+<tr><td>TLP</td><td>work packets (types, fields, status)</td><td>25</td><td>LINK</td><td>link training and link state</td><td>7</td></tr>
+<tr><td>SMBUS</td><td>sideband management bus (a small extra wire for management messages)</td><td>20</td><td>PM</td><td>power saving</td><td>6</td></tr>
+<tr><td>DLL</td><td>data link (ACK, NAK, sending packets again, DLLP format)</td><td>12</td><td>DB</td><td>doorbells</td><td>5</td></tr>
+<tr><td>REG</td><td>the drive's registers (CC, CSTS …)</td><td>13</td><td>DATA</td><td>whether the data stays correct</td><td>5</td></tr>
+<tr><td>TXN</td><td>matching each request with its answer</td><td>12</td><td>FC</td><td>flow control (credits)</td><td>5</td></tr>
+<tr><td>CFG</td><td>configuration space (the settings area)</td><td>12</td><td>MSG</td><td>PCIe messages</td><td>5</td></tr>
+<tr><td>S</td><td>counts over the whole trace (for example S.RARE_WINDOW: rare kinds of packet bunched together in a short time)</td><td>3</td><td></td><td></td><td></td></tr>
 </table></div>
 <p><b>Who-caused-it rules R0 to R10</b> are decision steps, checked in a fixed order. They decide who caused a defect: the host, the device, the platform, the link or the test setup. They live in the function <code>attribute</code> in <code>stage1/pcie_isolate/incidents.py</code>. Some examples: R0 = the recording itself is broken (gaps, filters). R2 = a command was turned down: were its fields valid? R3 = which step of a command never happened. R4 = whoever sent the first bad packet. R5 = the direction of the NAK decides the side. R7 = power-state trouble. R8 = data right when written but wrong when read = device. R9 = whose part of a delay is the biggest. R10 = nothing on the wire decides, so the analyser uses the host evidence or the catalogue's hint.</p>
 <p><b>Defect 1, Defect 2 …</b> get their numbers in the order the analyser found them in the trace. Inside the files they are stored as <code>INC-0001</code>, <code>INC-0002</code> (INC = incident, another word for defect). The screens never show that form.</p>
@@ -281,7 +282,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <div class="tw"><table>
 <tr><th style="width:22%">Word</th><th>What it means</th></tr>
 <tr><td>Finding</td><td>One rule going off on one packet, like one smoke alarm beeping. A trace can give thousands of findings. The analyser groups them into defects.</td></tr>
-<tr><td>Defect (incident)</td><td>A group of findings that are less than 1000 packets apart from each other. Each defect has one "first abnormal packet", one root cause and one catalogue match.</td></tr>
+<tr><td>Defect (incident)</td><td>A group of findings tied together by a shared identifier (the same transaction, command or sequence number), by a reference (one finding points at the packet of another) or by the same packet. Findings with no identifier are counted as a series of their kind. Each defect has one "first abnormal packet", one root cause and one catalogue match.</td></tr>
 <tr><td>First abnormal packet</td><td>The earliest packet where things stop being normal. It is not always the loudest one. Think of the first domino that falls, not the biggest crash. The packet picture marks it "first abnormal" in red.</td></tr>
 <tr><td>Root cause / knock-on effect / separate finding</td><td>The three jobs a finding can have in one defect. The root cause is the first cause. A knock-on effect is something the root cause led to, like the dominoes that fall after the first. A separate finding is related, but it does not come from the root cause.</td></tr>
 <tr><td>Confirmed / Suspect / Needs evidence</td><td>The analyser's verdict (its decision). Confirmed = the rules prove it from the packets. Suspect = a rule went off, but the proof is not complete. Needs evidence = the packets show only a sign of the problem. A host log would be needed.</td></tr>
@@ -354,7 +355,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 
 <h3>3.1 Three layers</h3>
 <ol>
-<li><b>The screens</b> (folder <code>app/static/</code>). There are three web pages. <code>index.html</code> holds the five steps of the work. <code>defect.html</code> shows the full record of one defect. <code>db.html</code> shows the knowledge base (the program's memory of earlier decisions). Small JavaScript files (code that runs in the web browser) make the pages work. <code>main.js</code> runs the sidebar, the locks and which page is shown. <code>run.js</code> runs steps 1 and 2. <code>incidents.js</code> runs step 3. <code>review.js</code> and <code>decision.js</code> run step 4. There are also <code>report.js</code>, <code>settings.js</code>, <code>defect.js</code> and <code>db.js</code>. <code>api.js</code> holds shared helpers and the plain-word translations.</li>
+<li><b>The screens</b> (folder <code>app/static/</code>). There are three web pages. <code>index.html</code> holds the five steps of the work. <code>defect.html</code> shows the full record of one defect. <code>db.html</code> shows the knowledge base (the program's memory of earlier decisions). Small JavaScript files (code that runs in the web browser) make the pages work. <code>main.js</code> runs the sidebar, the locks and which page is shown. <code>run.js</code> runs steps 1 and 2. <code>incidents.js</code> runs step 3. <code>review.js</code> and <code>decision.js</code> run step 5. There are also <code>report.js</code>, <code>settings.js</code>, <code>defect.js</code> and <code>db.js</code>. <code>api.js</code> holds shared helpers and the plain-word translations.</li>
 <li><b>The server</b> (folder <code>app/</code>). You start it with <code>python3 run_app.py</code>. It answers the requests from the screens. <code>server.py</code> builds the web app. The five files in <code>app/api/</code> set out the addresses. Each address has one Python function (a piece of code in the Python language). <code>services.py</code> holds the objects that all addresses share. <code>jobs.py</code> runs long work in the background. <code>stage1_runner.py</code> drives the analyser (the checking program). <code>stage2_service.py</code> drives stage 2. <code>report.py</code> builds the report. <code>bench_hook.py</code> is where you plug in a real lab bench (a test station with a real drive).</li>
 <li><b>The two engines</b>. <code>stage1/pcie_isolate/</code> is the analyser. You can also use it on its own, by typing commands in a terminal. <code>stage2/</code> is the engine that makes the defect happen again in the lab. It also holds the knowledge base.</li>
 </ol>
@@ -390,9 +391,9 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <tr><td><code>DELETE /api/runs/&lt;run&gt;</code></td><td><code>delete_run</code></td><td><b>Delete</b> in the Earlier runs table</td><td>Removes the run folder and its jobs. It does not touch the knowledge base.</td></tr>
 <tr><td><code>GET /api/jobs/&lt;job&gt;</code>, <code>…/events</code></td><td><code>get_job</code>, <code>job_events</code> (misc_api.py)</td><td>any progress bar, the Activity log</td><td>The job's state and the lines the analyser printed.</td></tr>
 <tr><td><code>GET /api/runs/&lt;run&gt;/incidents</code></td><td><code>list_incidents</code> (stage2_api.py)</td><td>step 3 and the defect list of step 2</td><td>All defects, each with its verdict, the AI opinion and its catalogue match (the closest of the 485 known error types).</td></tr>
-<tr><td><code>GET /api/runs/&lt;run&gt;/incidents/&lt;inc&gt;</code></td><td><code>get_incident</code></td><td>you open a defect in step 4</td><td>The defect, its packet rows and the AI review. Also its final stage-1 record, its failure signature (its unique mark) and its stage-2 state.</td></tr>
+<tr><td><code>GET /api/runs/&lt;run&gt;/incidents/&lt;inc&gt;</code></td><td><code>get_incident</code></td><td>you open a defect in step 5</td><td>The defect, its packet rows and the AI review. Also its final stage-1 record, its failure signature (its unique mark) and its stage-2 state.</td></tr>
 <tr><td><code>GET /api/runs/&lt;run&gt;/defect/&lt;inc&gt;</code></td><td><code>defect_record</code></td><td>the defect page opens</td><td>Everything about one defect, in reading order. It also gives earlier decisions on the same error type.</td></tr>
-<tr><td><code>GET /api/runs/&lt;run&gt;/stage2/queue</code></td><td><code>queue</code></td><td>step 4 opens</td><td>Whether stage 2 was started, and each defect's stage-2 state.</td></tr>
+<tr><td><code>GET /api/runs/&lt;run&gt;/stage2/queue</code></td><td><code>queue</code></td><td>step 5 opens</td><td>Whether stage 2 was started, and each defect's stage-2 state.</td></tr>
 <tr><td><code>POST /api/runs/&lt;run&gt;/stage2/start</code></td><td><code>start</code> → <code>_prepare</code></td><td><b>Start stage 2</b></td><td>Writes the STARTED marker file. Then a job looks up every defect and asks the AI reviewer (an AI model asked for a second opinion).</td></tr>
 <tr><td><code>POST …/incidents/&lt;inc&gt;/present</code></td><td><code>present</code></td><td>a defect opens with no saved lookup, or you press <b>Look up again</b></td><td>Searches the knowledge base, checks "seen before" and gets the AI proposal. It keeps all this until you decide.</td></tr>
 <tr><td><code>GET …/incidents/&lt;inc&gt;/solutions</code></td><td><code>solutions</code></td><td>the cards of a defect are drawn</td><td>The saved procedures (recipes that make the defect happen again) and the AI proposal. Each comes with counts and history. Approved ones come first, then ones that passed in the lab, then ones from the same family.</td></tr>
@@ -487,7 +488,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <h3>4.1 The sidebar and the top bar (on every screen)</h3>
 <div class="tw"><table class="flow">
 <tr><td>Steps 1 to 5</td><td>Buttons that open each step. A lock means the step before it is not finished yet. The line under each step shows its latest state ("complete · 14.7 s", "3 of 3 decided · 2 regression tests"). Code: <code>show()</code> and <code>applyLocks()</code> in <code>main.js</code>.</td></tr>
-<tr><td>"0 of 5 steps completed · 5 remaining"</td><td>Counts the finished steps of the chosen run.</td></tr>
+<tr><td>"0 of 6 steps completed · 6 remaining"</td><td>Counts the finished steps of the chosen run.</td></tr>
 <tr><td>Settings, What the words mean</td><td>Open the settings page (12.4) and the word list page (12.5).</td></tr>
 <tr><td>Knowledge base (opens in a new tab)</td><td>Opens <code>/db</code> (12.3).</td></tr>
 <tr><td>Bottom of the sidebar: "AI reviewer Anthropic claude-haiku-5-5 · lab device simulated device"</td><td>Shows which AI model is linked up. It also shows where lab runs go: to the pretend drive inside the program, or to a real bench (setting <code>stage2.bench</code>).</td></tr>
@@ -501,6 +502,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <tr><th>Field</th><th>What to type</th><th>Sent to the server as</th><th>What the server does with it</th></tr>
 <tr><td>Analyzer CSV path <span class="tag bad">required</span></td><td>The full path of the trace file on the server's disk. It is the 113-column CSV (a text table) that the recording tool saved. For example <code>/home/you/captures/trace.csv</code>. Only the path is sent, never the file.</td><td><code>csv_path</code></td><td><code>safe_path</code> checks that the file exists. It also checks that the file sits inside one of the allowed folders in <code>config/app_config.json</code> (<code>paths.allowed_csv_roots</code>). Any other path is refused with a message. This stops the screen from reading any file it likes.</td></tr>
 <tr><td>Payload sidecar</td><td>Only needed if your trace file holds only packet sizes, not the bytes inside the packets. The sidecar is an extra file with those bytes.</td><td><code>payload</code></td><td>Passed to the analyser. Without the bytes, the NVMe rules cannot run. NVMe is the drive's command language; these rules check commands, answers and the drive's registers (its control slots). Then step 2 shows a yellow warning.</td></tr>
+<tr><td>Analyzer error summary (Errors.csv)</td><td>The list of error kinds and their counts that the analyzer software makes itself (Reports &rsaquo; Error Summary, saved as a CSV file). You may leave it out.</td><td><code>errors</code></td><td>Turns on the "verify" step. It compares the analyzer's count of each of its 72 error kinds with what this analyser found, kind by kind, and step 2 shows the table. It also says which kinds this export cannot show by name: the analyzer writes some error packets without a packet number and without a name, unless the export was made with its "Errors" column.</td></tr>
 <tr><td>Linux kernel log (dmesg -x), Host tool records (host_events.jsonl)</td><td>Evidence from the host (the computer): its system log and the records of its test tools. You may leave them out, but you should add them. About 46 error types leave no trace on the link.</td><td><code>dmesg</code>, <code>events</code></td><td>Turns on the "fuse" step. It places each host line on the same timeline as the packets.</td></tr>
 <tr><td>Your name <span class="tag bad">required</span></td><td>Who starts the run. Your browser remembers it for next time.</td><td><code>operator</code></td><td>Stored with the run. Stage 2 also puts it on every event as the person who decided, unless another name is typed.</td></tr>
 <tr><td>Device under test</td><td>The drive's name. Leave it empty to read the name from the trace.</td><td><code>device</code></td><td><code>device_of</code> picks the name in this order. First the typed name. Else the model number, taken from the drive's answer to the Identify Controller command in the trace. Else "PCI device vendor:device" (maker and product numbers) from the header every PCIe device has. Else "unknown device". The knowledge base files procedures and tests under each device model.</td></tr>
@@ -524,7 +526,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
     try { localStorage.setItem(&quot;operator&quot;, $(&quot;operator&quot;).value.trim()); } catch (e) { /* storage may be unavailable */ }
     if (!$(&quot;csv_path&quot;).value.trim()) { $(&quot;run-msg&quot;).textContent = &quot;the CSV path is required&quot;; $(&quot;csv_path&quot;).focus(); return; }
     try {
-      const r = await api(&quot;POST&quot;, &quot;/api/runs&quot;, { csv_path: $(&quot;csv_path&quot;).value, operator: $(&quot;operator&quot;).value.trim(), device: $(&quot;device&quot;).value.trim(), payload: $(&quot;payload&quot;).value, dmesg: $(&quot;dmesg&quot;).value, events: $(&quot;events&quot;).value, nsze: $(&quot;nsze&quot;).value, firmware: $(&quot;firmware&quot;).value, label: $(&quot;label&quot;).value, force: $(&quot;force&quot;).checked });
+      const r = await api(&quot;POST&quot;, &quot;/api/runs&quot;, { csv_path: pathText($(&quot;csv_path&quot;).value), operator: $(&quot;operator&quot;).value.trim(), device: $(&quot;device&quot;).value.trim(), payload: pathText($(&quot;payload&quot;).value), dmesg: pathText($(&quot;dmesg&quot;).value), events: pathText($(&quot;events&quot;).value), errors: pathText($(&quot;errors&quot;).value), nsze: $(&quot;nsze&quot;).value, firmware: $(&quot;firmware&quot;).value, label: $(&quot;label&quot;).value, force: $(&quot;force&quot;).checked });
       $(&quot;run-msg&quot;).textContent = r.reused ? &quot;this file was already analysed - opened the existing run &quot; + r.run_id : &quot;analysis started: run &quot; + r.run_id;
       if (r.reused) toast(r.message, 7000);
       S.run = r.run_id; await refreshRuns(); $(&quot;run-select&quot;).value = S.run; show(&quot;run&quot;, undefined, &quot;analyse&quot;);
@@ -536,7 +538,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
     if err:
         return jsonify({&quot;error&quot;: err}), 400
     extra = {}
-    for k in (&quot;dmesg&quot;, &quot;events&quot;, &quot;payload&quot;):
+    for k in (&quot;dmesg&quot;, &quot;events&quot;, &quot;payload&quot;, &quot;errors&quot;):
         if body.get(k):
             p, e = s.safe_path(body[k])
             if e:
@@ -558,7 +560,9 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
               &quot;cache_db&quot;: os.path.join(s.root, &quot;db&quot;, &quot;app.sqlite&quot;), &quot;label&quot;: body.get(&quot;label&quot;, &quot;&quot;), **extra}
     jid = s.jobs.submit(&quot;stage1&quot;, params, run_stage1)
     return jsonify({&quot;run_id&quot;: run_id, &quot;job&quot;: jid, &quot;reused&quot;: False})</code></pre></figure>
-<figure class="code"><figcaption><span class="file">app/services.py</span> lines 35–43 · Services.safe_path()</figcaption><pre><code>    def safe_path(self, p, must_exist=True):
+<figure class="code"><figcaption><span class="file">app/services.py</span> lines 35–45 · Services.safe_path()</figcaption><pre><code>    def safe_path(self, p, must_exist=True):
+        # a path pasted from Windows &quot;Copy as path&quot; carries quotes; one typed by hand may carry a stray space
+        p = (p or &quot;&quot;).strip().strip(&#x27;&quot;&#x27;).strip(&quot;&#x27;&quot;).strip()
         if not p:
             return None, &quot;path required&quot;
         rp = pathlib.Path(os.path.expanduser(p)).resolve()
@@ -567,13 +571,13 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
         if not any(rp == r or rp.is_relative_to(r) for r in self.roots):
             return None, &quot;path outside the allowed roots (config paths.allowed_csv_roots): %s&quot; % rp
         return str(rp), None</code></pre></figure>
-<figure class="code"><figcaption><span class="file">app/services.py</span> lines 90–95 · Services.run_key()</figcaption><pre><code>    @staticmethod
+<figure class="code"><figcaption><span class="file">app/services.py</span> lines 92–97 · Services.run_key()</figcaption><pre><code>    @staticmethod
     def run_key(csv_path, extra, llm):
         st = os.stat(csv_path)
         raw = json.dumps({&quot;csv&quot;: csv_path, &quot;size&quot;: st.st_size, &quot;mtime&quot;: int(st.st_mtime), &quot;extra&quot;: extra,
                           &quot;model&quot;: llm.get(&quot;model&quot;), &quot;backend&quot;: llm.get(&quot;backend&quot;), &quot;effort&quot;: llm.get(&quot;effort&quot;)}, sort_keys=True)
         return hashlib.sha256(raw.encode()).hexdigest()[:20]</code></pre></figure>
-<figure class="code"><figcaption><span class="file">app/services.py</span> lines 67–82 · Services.device_of()</figcaption><pre><code>    def device_of(self, job):
+<figure class="code"><figcaption><span class="file">app/services.py</span> lines 69–84 · Services.device_of()</figcaption><pre><code>    def device_of(self, job):
         &quot;&quot;&quot;The device a run belongs to. The analyser reads the identity from the trace itself when the capture holds it:
         NVMe Identify Controller data (model number, serial number, firmware revision - NVMe Base Spec, Identify
         Controller data structure bytes 04:71) and the PCIe configuration header (Vendor ID / Device ID). The operator
@@ -591,7 +595,7 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
                 &quot;serial_number&quot;: ident.get(&quot;serial_number&quot;), &quot;firmware_revision&quot;: ident.get(&quot;firmware_revision&quot;), &quot;pci&quot;: pci, &quot;source&quot;: source}</code></pre></figure>
 
 <!-- ============================================================== 5 -->
-<h2 id="s5">5. Step 2 · Analyse the trace (stage 1)</h2>
+<h2 id="s5">5. Steps 2 and 3 · Analyse the trace (stage 1) and the NVMe commands page</h2>
 <figure class="shot"><img src="guide_images/analyse.jpg" alt="Analyse screen"><figcaption>The progress ring, the seven steps with counts that update as they run, and the warning about limited inputs.</figcaption></figure>
 
 <h3>5.1 What you see</h3>
@@ -603,12 +607,12 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
 <tr><td>Time taken per step</td><td>How many seconds each step took (the job's timing "spans"), and the stage-1 total.</td></tr>
 <tr><td>Yellow box "This trace was analysed with limited inputs"</td><td><code>get_run</code> makes this box when inputs are missing: no packet bytes, no host log, no namespace size. It tells you what to add, and to use "analyse again".</td></tr>
 <tr><td>Small labels: defects found, AI reviewer agrees, fresh model calls, verdicts reused, seconds taken</td><td>The run's totals.</td></tr>
-<tr><td>Bottom bar "Stage 2 complete: 3 of 3 defects decided …" with <b>Show as a table</b> and <b>Continue to stage 2</b></td><td>Open step 3 or step 4.</td></tr>
+<tr><td>Bottom bar "Stage 2 complete: 3 of 3 defects decided …" with <b>Show as a table</b> and <b>Continue to stage 2</b></td><td>Open step 3 or step 5.</td></tr>
 </table></div>
 
-<h3>5.2 The seven steps, and what each one does in the program</h3>
+<h3>5.2 The eight steps, and what each one does in the program</h3>
 <p>The job function <code>run_stage1</code> runs the analyser's own commands, one after another. It reads the progress they print, and times each one.</p>
-<figure class="code"><figcaption><span class="file">app/stage1_runner.py</span> lines 137–155 · run_stage1()</figcaption><pre><code>    an = [&quot;analyze&quot;, &quot;--csv&quot;, csv_path, &quot;--out&quot;, run_dir]
+<figure class="code"><figcaption><span class="file">app/stage1_runner.py</span> lines 138–163 · run_stage1()</figcaption><pre><code>    an = [&quot;analyze&quot;, &quot;--csv&quot;, csv_path, &quot;--out&quot;, run_dir]
     if params.get(&quot;payload&quot;):
         an += [&quot;--payload&quot;, params[&quot;payload&quot;]]
     if params.get(&quot;nsze&quot;):
@@ -626,51 +630,98 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
         iso += [&quot;--payload&quot;, params[&quot;payload&quot;]]
     step(&quot;isolate&quot;, iso, 40)
     incs = json.load(open(os.path.join(run_dir, &quot;incidents.json&quot;)))
-    summary[&quot;incidents&quot;] = len(incs)</code></pre></figure>
+    summary[&quot;incidents&quot;] = len(incs)
+    step(&quot;commands&quot;, [&quot;commands&quot;, &quot;--run&quot;, run_dir, &quot;--model&quot;, cfg.get(&quot;model&quot;, &quot;claude-haiku-5-5&quot;), &quot;--backend&quot;, backend], 72)
+    try:
+        cs = json.load(open(os.path.join(run_dir, &quot;command_summary.json&quot;)))
+        summary[&quot;commands&quot;] = {&quot;n&quot;: cs.get(&quot;n_commands&quot;, 0), &quot;kinds&quot;: cs.get(&quot;n_types&quot;, 0),
+                               &quot;with_errors&quot;: cs.get(&quot;n_with_errors&quot;, 0), &quot;not_completed&quot;: cs.get(&quot;n_not_completed&quot;, 0)}
+    except Exception:
+        summary[&quot;commands&quot;] = None</code></pre></figure>
 <ol class="steps">
 <li><b>Read the capture and check every packet</b> (<code>analyze</code>). The analyser goes through the CSV once, row by row. It never loads the whole file, so it works even on a 4 GB file. Each row goes to the code for its kind of packet. One kind is TLP (a packet that carries real work). Others are ACK (a "got it" reply) and other DLLPs (small housekeeping packets). Then come ordered sets (control signals on the cable), link events and markers. Fifteen trackers keep the state that the official rule book defines. They follow the link state and the ACK/NAK numbers (got it / send it again). They follow flow-control credits (how much room each side has left). They follow open requests by Requester ID + Tag (numbers that tie an answer to its request). They keep a copy of the standard setup registers every PCIe device has. They keep the BAR map (where the drive's registers sit in memory). They follow the drive's registers and the NVMe queues (NVMe is the drive's command language). They follow each command by queue + command id. They also follow interrupts (the drive's signals to the computer), power state, messages and speed counts. When a state goes wrong, a rule "fires". The analyser then records a <b>finding</b> with its packet number and a detail text. It always links packets by their id numbers, never by "the next row".
-<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/engine.py</span> lines 365–419 · Engine.run()</figcaption><pre><code>    def run(self):
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/engine.py</span> lines 535–629 · Engine.run()</figcaption><pre><code>    def run(self):
         t0 = time.time()
-        f = open(self.csv_path, newline=&quot;&quot;, encoding=&quot;utf-8&quot;, buffering=1 &lt;&lt; 22)
+        f = open(self.csv_path, newline=&quot;&quot;, encoding=&quot;utf-8-sig&quot;, errors=&quot;replace&quot;, buffering=1 &lt;&lt; 22)
         rd = csv.reader(f)
         C = self.C = Cols(next(rd))
         pad = C.pad
+        self.be_cols_absent = &quot;FBE&quot; in C.absent or &quot;LBE&quot; in C.absent
+        self.errors_col = &quot;ERRORS&quot; not in C.absent
         if C.missing and self.progress:
             print(&quot;  columns not in this export (treated as empty): %s&quot; % &quot;, &quot;.join(C.missing), flush=True)
         dirmap = self.calibrate_dirs(C)
         iTLP, iDLLP, iOS, iEVT, iMARK, iPKT, iTS = C.TLP, C.DLLP, C.OS, C.EVT, C.MARKER, C.PKT, C.TS
-        iDIR, iACK, iCRC = C.DIR, C.ACKSEQ, C.CRC16
+        iDIR, iACK, iCRC, iERR = C.DIR, C.ACKSEQ, C.CRC16, C.ERRORS
         tie_n, tie_t = 0, -1
         rows = 0
+        width = len(C.header)
         for row in rd:
             rows += 1
             if pad:
                 row += pad
+            if len(row) &lt; width:
+                # a short row (truncated line, export cut mid-row): pad so every column reads as empty
+                row += [&quot;&quot;] * (width - len(row))
             if dirmap:
                 row[iDIR] = dirmap.get(row[iDIR], row[iDIR])
-            pkt = int(row[iPKT])
-            t = ts_ps(row[iTS])
-            tl = row[iTLP]
-            if tl:
-                self.on_tlp(row, pkt, t, tl)
-            else:
-                dl = row[iDLLP]
-                if dl == &quot;ACK&quot;:
-                    self.on_ack(row[iDIR], int(row[iACK]), pkt, t, False)
-                    if row[iCRC].endswith(&quot;)&quot;):
-                        self.emit(&quot;DLL.CRC16_BAD&quot;, pkt, t, &quot;%s Ack CRC 16 %s (DLLP discarded)&quot; %
-                                  (row[iDIR], row[iCRC]), qual=&quot;ACK&quot;)
-                        self.token(pkt, &quot;D|ACK|bad&quot;)
-                elif dl:
-                    self.on_dllp(row, pkt, t, dl)
-                elif row[iOS]:
-                    self.on_os(row, pkt, t, row[iOS])
-                elif row[iEVT]:
-                    self.on_event(row, pkt, t, row[iEVT])
+            # ---- real exports contain rows the decoder cannot place: note them, never stop on them
+            pkt_s = row[iPKT]
+            if not pkt_s.isdigit():
+                if not pkt_s:
+                    self.on_undecoded(rows, row)          # an error packet: the analyzer wrote no number and no type
                 else:
-                    self.on_other(row, pkt, t)
-            if row[iMARK]:
-                self.on_marker(row[iMARK], pkt, t)
+                    self.skip_row(rows, pkt_s, &quot;packet number is not a whole number&quot;, row)
+                continue
+            pkt = int(pkt_s)
+            t = ts_ps_or_none(row[iTS])
+            if t is None:
+                if self.last_t is None:
+                    self.skip_row(rows, pkt_s, &quot;no time stamp&quot;, row)
+                    continue
+                t = self.last_t
+                self.undecoded[&quot;no time stamp (previous row&#x27;s time used)&quot;] += 1
+            tl = row[iTLP]
+            try:
+                if row[iERR]:
+                    self.on_errors_column(row[iERR], pkt, t, row[iDIR])
+                if tl:
+                    self.vocab_add(&quot;TLP Type&quot;, tl)
+                    self.on_tlp(row, pkt, t, tl)
+                else:
+                    dl = row[iDLLP]
+                    if dl == &quot;ACK&quot;:
+                        seq_s = row[iACK]
+                        seq = _num(seq_s) if seq_s else None
+                        if seq is not None:
+                            self.on_ack(row[iDIR], seq, pkt, t, False)
+                        else:
+                            # an Ack whose sequence number the analyzer could not decode: it still proves the
+                            # data link is alive, but it cannot be matched to the TLPs it acknowledges
+                            self.tlps_since_dllp = 0
+                            self.dllp_filter_open = False
+                            self.last_ack_t[row[iDIR]] = t
+                            self.skip_row(rows, pkt_s, &quot;Ack without a sequence number&quot;, row, kept=True)
+                        if _bad(row[iCRC]):
+                            self.emit(&quot;DLL.CRC16_BAD&quot;, pkt, t, &quot;%s Ack CRC 16 %s (DLLP discarded)&quot; %
+                                      (row[iDIR], row[iCRC]), qual=&quot;ACK&quot;)
+                            self.token(pkt, &quot;D|ACK|bad&quot;)
+                    elif dl:
+                        self.vocab_add(&quot;DLLP Type&quot;, dl)
+                        self.on_dllp(row, pkt, t, dl)
+                    elif row[iOS]:
+                        self.vocab_add(&quot;Ord.Set Type&quot;, row[iOS])
+                        self.on_os(row, pkt, t, row[iOS])
+                    elif row[iEVT]:
+                        self.vocab_add(&quot;Link Event&quot;, row[iEVT])
+                        self.on_event(row, pkt, t, row[iEVT])
+                    else:
+                        self.on_other(row, pkt, t)
+                if row[iMARK]:
+                    self.on_marker(row[iMARK], pkt, t)
+            except (ValueError, IndexError, KeyError) as ex:
+                # one row with a cell the decoder does not understand must not stop a 5 GB analysis
+                self.skip_row(rows, pkt_s, &quot;cell not understood (%s)&quot; % str(ex)[:80], row, kept=True)
             if t == tie_t:
                 tie_n += 1
                 if tie_n == 16:
@@ -685,61 +736,423 @@ A step stays grey, with a lock sign, until the step before it is done. You canno
                 self.first_t = t
             self.last_t, self.last_pkt = t, pkt</code></pre></figure>
 Example: the rule that finds error type T-42. The host writes D0 (fully on) into the power-management register. The analyser notes the time. Any memory read or write to the drive less than 10 ms later fires <code>CFG.D0_EARLY</code>.
-<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/engine.py</span> lines 1155–1173 · Engine.mmio_gate()</figcaption><pre><code>    def mmio_gate(self, pkt, t, what):
-        &quot;&quot;&quot;Checks every host MMIO access against the config shadow.&quot;&quot;&quot;
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/engine.py</span> lines 1767–1787 · Engine.mmio_gate()</figcaption><pre><code>    def mmio_gate(self, pkt, t, what, key=None):
+        &quot;&quot;&quot;Checks every host MMIO access against the config shadow.  key = (RequesterID, Tag) of a non-posted access,
+        so that the finding and the access&#x27;s completion name the same transaction (PCIe 4.0 §2.2.6.2).&quot;&quot;&quot;
+        ks = ((&quot;tag&quot;,) + tuple(key),) if key else ()
         if self.cfg_first_t is not None:
             self.sample(&quot;config_to_driver&quot;, t - self.cfg_first_t[0], self.cfg_first_t[1])
             self.cfg_first_t = None
         if self.cmd_reg is not None and not self.cmd_reg &amp; 0x2:
-            self.emit(&quot;CFG.MEM_DISABLED_MMIO&quot;, pkt, t, &quot;%s with Memory Space Enable = 0&quot; % what)
+            self.emit(&quot;CFG.MEM_DISABLED_MMIO&quot;, pkt, t, &quot;%s with Memory Space Enable = 0&quot; % what, keys=ks)
         if self.dstate == 3:
-            self.emit(&quot;CFG.D3_ACCESS&quot;, pkt, t, &quot;%s while the function is in D3hot&quot; % what)
+            self.emit(&quot;CFG.D3_ACCESS&quot;, pkt, t, &quot;%s while the function is in D3hot&quot; % what, keys=ks)
         if self.d0_t and t - self.d0_t[0] &lt; self.D0_WAIT_PS:
             self.emit(&quot;CFG.D0_EARLY&quot;, pkt, t, &quot;%s %s after D3hot-&gt;D0&quot; % (what, fmt_dt(t - self.d0_t[0])),
-                      rel=(self.d0_t[1],))
+                      keys=ks, rel=(self.d0_t[1],))
             self.d0_t = None
         elif self.d0_t and t - self.d0_t[0] &gt;= self.D0_WAIT_PS:
             self.d0_t = None
         if self.flr_t and t - self.flr_t[0] &lt; self.FLR_WAIT_PS:
             self.emit(&quot;CFG.FLR_EARLY&quot;, pkt, t, &quot;%s %s after FLR&quot; % (what, fmt_dt(t - self.flr_t[0])),
-                      rel=(self.flr_t[1],))
+                      keys=ks, rel=(self.flr_t[1],))
             self.flr_t = None</code></pre></figure>
 The rule's line in the rule table gives its tier (what kind of check it is). It also gives its level (defect or context), the verdict it hands out, its layer and its families.
-<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/rules.py</span> lines 111–111 · rules.py</figcaption><pre><code>    (&quot;CFG.D0_EARLY&quot;,            &quot;N&quot;, DEFECT,  &quot;CONFIRMED&quot;, &quot;config&quot;,    &quot;P19&quot;,       &quot;access sooner than 10 ms after D3hot-&gt;D0&quot;),</code></pre></figure>
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/rules.py</span> lines 111–111 · rules.py</figcaption><pre><code>    (&quot;PHY.TS_PARITY&quot;,           &quot;A&quot;, DEFECT,  &quot;CONFIRMED&quot;, &quot;physical&quot;,  &quot;P08&quot;,       &quot;TS1/TS2 equalization-field parity failed (8 GT/s+)&quot;),</code></pre></figure>
 </li>
 <li><b>Line up the host evidence with the packets</b> (<code>fuse</code>). This step runs only when you gave a dmesg or host_events file. It places each host line on the same timeline as the packets. Then a defect can point to that line.</li>
-<li><b>Group the rules that fired into defects</b> (<code>isolate</code>). Findings closer than 1000 packets to each other form one defect. Context findings next to it are added too, such as host actions and resets. For each defect the step works out several things. First, the first packet that went wrong. Second, an evidence graph. This map links findings with the same ids, and adds published cause→effect links. The starting point of the map is the root cause. Third, the catalogue match. The step scores all 485 error types against the findings and keeps the top three as possible answers. Fourth, who caused it, found by rules R0–R10 (section 2.4). Last, the NVMe command and host task involved, and the packet rows around the defect.
-<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/incidents.py</span> lines 73–103 · cluster()</figcaption><pre><code>def cluster(findings):
-    defects = sorted((f for f in findings if RULES[f[2]][&quot;level&quot;] == DEFECT), key=lambda f: interval(f)[0])
-    groups = []
-    for f in defects:
-        lo, hi = interval(f)
-        if groups and lo &lt;= groups[-1][&quot;hi&quot;] + GAP_PKTS:
-            g = groups[-1]
-            g[&quot;hi&quot;] = max(g[&quot;hi&quot;], hi)
-            g[&quot;f&quot;].append(f)
-        else:
-            groups.append({&quot;lo&quot;: lo, &quot;hi&quot;: hi, &quot;f&quot;: [f]})
-    # attach context findings (host actions, resets) that fall inside or right next to an incident
-    ctx = sorted((f for f in findings if RULES[f[2]][&quot;level&quot;] == CONTEXT), key=lambda f: f[0])
-    import bisect
-    starts = [g[&quot;lo&quot;] for g in groups]
-    for f in ctx:
-        i = bisect.bisect_right(starts, f[0] + 200) - 1
-        if i &gt;= 0 and f[0] &lt;= groups[i][&quot;hi&quot;] + 200:
-            groups[i][&quot;f&quot;].append(f)
-    merged = []
-    for g in groups:
-        only_h = all(RULES[f[2]][&quot;tier&quot;] == &quot;H&quot; for f in g[&quot;f&quot;] if RULES[f[2]][&quot;level&quot;] == DEFECT)
-        if merged and only_h is False and merged[-1].get(&quot;_only_h&quot;) and g[&quot;lo&quot;] - merged[-1][&quot;hi&quot;] &lt;= H_LEAD_PKTS:
-            prev = merged.pop()
-            g[&quot;lo&quot;], g[&quot;f&quot;] = prev[&quot;lo&quot;], prev[&quot;f&quot;] + g[&quot;f&quot;]
-        g[&quot;_only_h&quot;] = only_h
-        merged.append(g)
-    for g in merged:
-        g.pop(&quot;_only_h&quot;, None)
-        g[&quot;f&quot;].sort(key=lambda f: f[0])
-    return merged</code></pre></figure>
+<li><b>Group the rules that fired into defects</b> (<code>isolate</code>). Findings that name the same transaction, command or sequence number, or that refer to each other's packet, form one defect; nothing is joined by distance. A context finding (a host action, a reset) is added only when a finding refers to it. For each defect the step works out several things. First, the first packet that went wrong. Second, an evidence graph. This map links findings with the same ids, and adds published cause→effect links. The starting point of the map is the root cause. Third, the catalogue match. The step scores all 485 error types against the findings and keeps the top three as possible answers. Fourth, who caused it, found by rules R0–R10 (section 2.4). Last, the NVMe command and host task involved, and the packet rows around the defect.
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/incidents.py</span> lines 89–147 · cluster()</figcaption><pre><code>def cluster(findings):
+    &quot;&quot;&quot;Group findings by specification-defined relations only (SAME_KEY, REFERS, SAME_ROW), then fold
+    identifier-less findings of one rule and qualifier into one SERIES group.  Context findings (host actions,
+    resets) are kept only when a defect finding refers to them; an unrelated context finding is not a defect.&quot;&quot;&quot;
+    fs = sorted(findings, key=lambda f: (f[0], f[2]))
+    n = len(fs)
+    parent = list(range(n))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def union(i, j):
+        ri, rj = find(i), find(j)
+        if ri != rj:
+            parent[max(ri, rj)] = min(ri, rj)
+    by_key = defaultdict(list)
+    by_pkt = defaultdict(list)
+    for i, f in enumerate(fs):
+        for k in f[5]:
+            if k and k[0] in LINK_KEYS:
+                by_key[tuple(k)].append(i)
+        by_pkt[f[0]].append(i)
+    for ids in by_key.values():                       # SAME_KEY
+        for j in ids[1:]:
+            union(ids[0], j)
+    for ids in by_pkt.values():                       # SAME_ROW
+        for j in ids[1:]:
+            union(ids[0], j)
+    for i, f in enumerate(fs):                        # REFERS
+        for p in f[6]:
+            if isinstance(p, int):
+                for j in by_pkt.get(p, ()):
+                    union(i, j)
+    groups = defaultdict(list)
+    for i, f in enumerate(fs):
+        groups[find(i)].append(f)
+    out = []
+    series = {}
+    for g in groups.values():
+        defects = [f for f in g if RULES[f[2]][&quot;level&quot;] == DEFECT and RULES[f[2]][&quot;tier&quot;] != &quot;S&quot;]
+        if not defects:
+            continue                                  # context or statistics alone is not a defect
+        if len(g) == 1 and not g[0][5] and not [p for p in g[0][6] if isinstance(p, int)]:
+            # no identifier, no reference: one of a series (rule, qualifier)
+            f = g[0]
+            series.setdefault((f[2], f[3]), []).append(f)
+            continue
+        lo = min(interval(f)[0] for f in g)
+        hi = max(interval(f)[1] for f in g)
+        out.append({&quot;lo&quot;: lo, &quot;hi&quot;: hi, &quot;f&quot;: sorted(g, key=lambda f: f[0]), &quot;kind&quot;: &quot;linked&quot;})
+    for (rule, qual), fl in series.items():
+        fl.sort(key=lambda f: f[0])
+        out.append({&quot;lo&quot;: fl[0][0], &quot;hi&quot;: fl[0][0], &quot;f&quot;: fl, &quot;kind&quot;: &quot;series&quot;, &quot;series_count&quot;: len(fl),
+                    &quot;series_pkts&quot;: [f[0] for f in fl]})
+    out.sort(key=lambda g: (g[&quot;lo&quot;], g[&quot;hi&quot;]))
+    return out</code></pre></figure>
+</li>
+<li><b>Summarise every NVMe command</b> (<code>commands</code>). While reading, the analyser followed each command from its doorbell write to its completion entry and wrote one line per command (<code>commands.jsonl</code>). This step turns those lines into the NVMe commands page: the parameters each command carried (decoded as the NVMe specifications define the fields), the time of each step, a label with its basis, and the packet-level findings that carry the command's identity.
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/commands.py</span> lines 634–963 · build()</figcaption><pre><code>def build(run_dir, max_examples=50):
+    src = os.path.join(run_dir, &quot;commands.jsonl&quot;)
+    recs = []
+    if os.path.exists(src):
+        with open(src) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    recs.append(json.loads(line))
+    findings = _load_findings(run_dir)
+    by_pkt = collections.defaultdict(list)
+    by_cmd = collections.defaultdict(list)
+    for f in findings:
+        by_pkt[f[0]].append(f)
+        for k in f[5]:
+            if k and k[0] == &quot;cmd&quot; and len(k) == 4:
+                by_cmd[(k[1], k[2], k[3])].append(f)
+    defects = _defect_index(run_dir)
+    # ---- per command type
+    groups = collections.defaultdict(list)
+    for r in recs:
+        groups[(0 if r[&quot;sqid&quot;] == 0 else 1, r[&quot;opc&quot;])].append(r)
+    # submission intervals per queue (time between consecutive doorbells / fetches) and host gaps
+    per_queue = collections.defaultdict(list)
+    for r in recs:
+        t = r.get(&quot;t_db&quot;) if r.get(&quot;t_db&quot;) is not None else r.get(&quot;t_fetch&quot;)
+        if t is not None:
+            per_queue[r[&quot;sqid&quot;]].append((t, r))
+    intervals = {&quot;admin&quot;: [], &quot;io&quot;: []}
+    host_gaps = {&quot;admin&quot;: [], &quot;io&quot;: []}
+    for q, lst in per_queue.items():
+        lst.sort(key=lambda x: x[0])
+        cls = &quot;admin&quot; if q == 0 else &quot;io&quot;
+        for (t0, r0), (t1, r1) in zip(lst, lst[1:]):
+            intervals[cls].append(t1 - t0)
+            if r0.get(&quot;t_cqe&quot;) is not None and t1 &gt;= r0[&quot;t_cqe&quot;]:
+                host_gaps[cls].append(t1 - r0[&quot;t_cqe&quot;])
+    types = []
+    all_rows = []
+    for (is_io, opc), lst in sorted(groups.items(), key=lambda kv: (kv[0][0], -len(kv[1]))):
+        sqid0 = 1 if is_io else 0
+        name = opc_name(sqid0, opc)
+        lats = [total_latency(r) for r in lst]
+        done = [r for r in lst if r.get(&quot;end&quot;) == &quot;cqe&quot;]
+        st_total = stats([total_latency(r) for r in done])
+        p90 = st_total[&quot;p90&quot;] if st_total else None
+        p99 = st_total[&quot;p99&quot;] if st_total else None
+        step_stats = {}
+        for r in done:
+            for s in steps_of(r):
+                step_stats.setdefault(s[&quot;step&quot;], {&quot;owner&quot;: s[&quot;owner&quot;], &quot;plain&quot;: s[&quot;plain&quot;], &quot;vals&quot;: []})
+                step_stats[s[&quot;step&quot;]][&quot;vals&quot;].append(s[&quot;ps&quot;])
+        steps = [{&quot;step&quot;: k, &quot;owner&quot;: v[&quot;owner&quot;], &quot;plain&quot;: v[&quot;plain&quot;], &quot;stats&quot;: stats(v[&quot;vals&quot;])}
+                 for k, v in step_stats.items()]
+        status = collections.Counter(status_words(tuple(r[&quot;status&quot;])) if r.get(&quot;status&quot;) else
+                                     (&quot;no completion: &quot; + str(r.get(&quot;lost&quot;) or r.get(&quot;end&quot;))) for r in lst)
+        over = sum(1 for r, l in zip(lst, lats) if r.get(&quot;end&quot;) == &quot;cqe&quot; and l is not None and
+                   l &gt; HOST_LIMIT[&quot;admin&quot; if sqid0 == 0 else &quot;io&quot;])
+        # observed parameter ranges
+        obs = {}
+        if is_io and opc in (0x01, 0x02, 0x04, 0x05, 0x08, 0x0C, 0x7D):
+            sl = [r.get(&quot;slba&quot;) for r in lst if r.get(&quot;slba&quot;) is not None]
+            nl = [r.get(&quot;nlb&quot;) for r in lst if r.get(&quot;nlb&quot;) is not None]
+            lb = lst[0].get(&quot;lba_bytes&quot;) or 512
+            obs = {&quot;LBA range&quot;: &quot;%d to %d&quot; % (min(sl), max(sl + [s + n for s, n in zip(sl, nl)])) if sl else &quot;-&quot;,
+                   &quot;blocks per command&quot;: &quot;%d to %d&quot; % (min(nl), max(nl)) if nl else &quot;-&quot;,
+                   &quot;bytes per command&quot;: &quot;%d to %d&quot; % (min(nl) * lb, max(nl) * lb) if nl else &quot;-&quot;,
+                   &quot;FUA set&quot;: sum(1 for r in lst if _bits((r.get(&quot;dw&quot;) or [0] * 6)[2], 30, 30)),
+                   &quot;namespaces&quot;: sorted({r.get(&quot;nsid&quot;) for r in lst})[:8]}
+        elif is_io and opc == 0x09:
+            obs = {&quot;ranges per command&quot;: &quot;%d to %d&quot; % (min(((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF) + 1 for r in lst),
+                                                        max(((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF) + 1 for r in lst)),
+                   &quot;deallocate (AD) set&quot;: sum(1 for r in lst if _bits((r.get(&quot;dw&quot;) or [0, 0])[1], 2, 2)),
+                   &quot;namespaces&quot;: sorted({r.get(&quot;nsid&quot;) for r in lst})[:8]}
+        elif not is_io and opc in (0x09, 0x0A):
+            fids = collections.Counter(FID_NAMES.get((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF, &quot;0x%02X&quot; % ((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF)) for r in lst)
+            obs = {&quot;features&quot;: dict(fids.most_common(12))}
+        elif not is_io and opc == 0x02:
+            lids = collections.Counter(LID_NAMES.get((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF, &quot;0x%02X&quot; % ((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF)) for r in lst)
+            obs = {&quot;log pages&quot;: dict(lids.most_common(12))}
+        elif not is_io and opc == 0x06:
+            cns = collections.Counter(CNS_NAMES.get((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF, &quot;0x%02X&quot; % ((r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFF)) for r in lst)
+            obs = {&quot;structures&quot;: dict(cns.most_common(12))}
+        elif not is_io and opc in (0x01, 0x05):
+            obs = {&quot;queues&quot;: sorted({(r.get(&quot;dw&quot;) or [0])[0] &amp; 0xFFFF for r in lst})[:16],
+                   &quot;queue sizes&quot;: sorted({((r.get(&quot;dw&quot;) or [0])[0] &gt;&gt; 16) + 1 for r in lst})[:8]}
+        # errors
+        err_counter = collections.Counter()
+        err_examples = {}
+        rows_with_err = []
+        for r in lst:
+            errs = errors_for(r, by_pkt, by_cmd, defects)
+            r[&quot;_errs&quot;] = errs
+            for e in errs:
+                err_counter[e[&quot;rule&quot;]] += 1
+                err_examples.setdefault(e[&quot;rule&quot;], []).append({&quot;pkt&quot;: e[&quot;pkt&quot;], &quot;cid&quot;: r[&quot;cid&quot;], &quot;sqid&quot;: r[&quot;sqid&quot;],
+                                                               &quot;defect&quot;: e[&quot;defect&quot;], &quot;detail&quot;: e[&quot;detail&quot;]})
+            if errs:
+                rows_with_err.append(r)
+        errors = [{&quot;rule&quot;: k, &quot;count&quot;: n, &quot;text&quot;: RULES.get(k, {}).get(&quot;text&quot;, k), &quot;layer&quot;: RULES.get(k, {}).get(&quot;layer&quot;),
+                   &quot;examples&quot;: err_examples[k][:3]} for k, n in err_counter.most_common()]
+        # example rows: slowest and with errors
+        def row_of(r):
+            lat = total_latency(r)
+            return {&quot;sqid&quot;: r[&quot;sqid&quot;], &quot;cid&quot;: r[&quot;cid&quot;], &quot;opc&quot;: r[&quot;opc&quot;], &quot;name&quot;: name, &quot;inst&quot;: r.get(&quot;inst&quot;),
+                    &quot;pkt_db&quot;: r.get(&quot;pkt_db&quot;), &quot;pkt_fetch&quot;: r.get(&quot;pkt_fetch&quot;), &quot;pkt_cqe&quot;: r.get(&quot;pkt_cqe&quot;),
+                    &quot;end&quot;: r.get(&quot;end&quot;), &quot;lost&quot;: r.get(&quot;lost&quot;), &quot;qd&quot;: r.get(&quot;qd&quot;), &quot;xfer&quot;: r.get(&quot;xfer&quot;),
+                    &quot;moved&quot;: r.get(&quot;moved&quot;), &quot;n_data&quot;: r.get(&quot;n_data&quot;), &quot;status&quot;: status_words(tuple(r[&quot;status&quot;])) if r.get(&quot;status&quot;) else None,
+                    &quot;latency_ps&quot;: lat, &quot;latency&quot;: fmt_ps(lat), &quot;label&quot;: label_for(r, lat, p90, p99),
+                    &quot;steps&quot;: [{&quot;step&quot;: s[&quot;step&quot;], &quot;owner&quot;: s[&quot;owner&quot;], &quot;ps&quot;: s[&quot;ps&quot;], &quot;text&quot;: fmt_ps(s[&quot;ps&quot;])} for s in steps_of(r)],
+                    &quot;params&quot;: param_rows(r), &quot;pieces&quot;: pieces_of(r), &quot;errors&quot;: r.get(&quot;_errs&quot;, [])}
+        slowest = sorted((r for r in done if total_latency(r) is not None), key=lambda r: -total_latency(r))[:5]
+        ex_rows = {}
+        for r in rows_with_err[:max_examples] + slowest + [r for r in lst if r.get(&quot;end&quot;) != &quot;cqe&quot;][:max_examples]:
+            ex_rows[(r[&quot;sqid&quot;], r[&quot;cid&quot;], r.get(&quot;inst&quot;))] = row_of(r)
+        for r in lst:
+            all_rows.append({&quot;sqid&quot;: r[&quot;sqid&quot;], &quot;cid&quot;: r[&quot;cid&quot;], &quot;opc&quot;: r[&quot;opc&quot;], &quot;name&quot;: name, &quot;inst&quot;: r.get(&quot;inst&quot;),
+                             &quot;latency_ps&quot;: total_latency(r), &quot;end&quot;: r.get(&quot;end&quot;), &quot;status&quot;: r.get(&quot;status&quot;),
+                             &quot;n_errors&quot;: len(r.get(&quot;_errs&quot;, [])), &quot;xfer&quot;: r.get(&quot;xfer&quot;), &quot;qd&quot;: r.get(&quot;qd&quot;)})
+        cls = &quot;admin&quot; if sqid0 == 0 else &quot;io&quot;
+        types.append({
+            &quot;klass&quot;: &quot;Admin command&quot; if sqid0 == 0 else &quot;I/O command&quot;, &quot;opcode&quot;: &quot;0x%02X&quot; % opc, &quot;name&quot;: name,
+            &quot;count&quot;: len(lst), &quot;completed&quot;: len(done), &quot;not_completed&quot;: len(lst) - len(done),
+            &quot;parameters&quot;: {&quot;fields&quot;: param_fields(sqid0, opc), &quot;observed&quot;: obs,
+                           &quot;source&quot;: (NVME_BASE if sqid0 == 0 else NVM_CS) + name},
+            &quot;latency&quot;: {&quot;total&quot;: st_total, &quot;total_text&quot;: {k: fmt_ps(v) for k, v in (st_total or {}).items() if k != &quot;n&quot;},
+                        &quot;steps&quot;: steps, &quot;over_host_limit&quot;: over, &quot;host_limit_s&quot;: HOST_LIMIT[cls] // SEC,
+                        &quot;long_by_nature&quot;: LONG_BY_NATURE.get(opc) if sqid0 == 0 else None,
+                        &quot;p90_text&quot;: fmt_ps(p90), &quot;p99_text&quot;: fmt_ps(p99),
+                        &quot;buckets_us&quot;: bucket_counts([total_latency(r) for r in done], LAT_BUCKETS, US),
+                        &quot;qd&quot;: qd_bucket_counts([r.get(&quot;qd&quot;) for r in lst]),
+                        &quot;sizes&quot;: size_bucket_counts([r.get(&quot;xfer&quot;) for r in lst]) if (is_io and opc in (0x01, 0x02, 0x05, 0x7D)) else None},
+            &quot;status&quot;: dict(status.most_common()),
+            &quot;errors&quot;: errors, &quot;commands_with_errors&quot;: len(rows_with_err),
+            &quot;examples&quot;: list(ex_rows.values())})
+    # ---- the error-first view: one row per command that failed, never completed, or carries a packet-level error;
+    #      each row ties the command, its parameters, the time it took and the packets that went wrong
+    error_rows, error_kinds = [], collections.Counter()
+    for (is_io, opc), lst in groups.items():
+        sqid0 = 1 if is_io else 0
+        name = opc_name(sqid0, opc)
+        done = [r for r in lst if r.get(&quot;end&quot;) == &quot;cqe&quot;]
+        st_total = stats([total_latency(r) for r in done])
+        p90 = st_total[&quot;p90&quot;] if st_total else None
+        p99 = st_total[&quot;p99&quot;] if st_total else None
+        for r in lst:
+            failed = bool(r.get(&quot;status&quot;)) and (r[&quot;status&quot;][0] or r[&quot;status&quot;][1])
+            if not (r.get(&quot;_errs&quot;) or failed or r.get(&quot;end&quot;) != &quot;cqe&quot;):
+                continue
+            kinds = []
+            if r.get(&quot;end&quot;) != &quot;cqe&quot;:
+                kinds.append(&quot;never completed: &quot; + str(r.get(&quot;lost&quot;) or r.get(&quot;end&quot;)))
+            if failed:
+                kinds.append(status_words(tuple(r[&quot;status&quot;])).split(&quot; (&quot;)[0])
+            for e in r.get(&quot;_errs&quot;) or []:
+                if e[&quot;rule&quot;] == &quot;NVME.STATUS&quot; and failed:
+                    continue                          # the same fact as the status word above
+                kinds.append(e[&quot;text&quot;])
+            for k in set(kinds):
+                error_kinds[k] += 1
+            lat = total_latency(r)
+            error_rows.append({&quot;sqid&quot;: r[&quot;sqid&quot;], &quot;cid&quot;: r[&quot;cid&quot;], &quot;opc&quot;: r[&quot;opc&quot;], &quot;name&quot;: name, &quot;inst&quot;: r.get(&quot;inst&quot;),
+                               &quot;klass&quot;: &quot;admin&quot; if sqid0 == 0 else &quot;io&quot;, &quot;kinds&quot;: sorted(set(kinds)),
+                               &quot;params&quot;: [p for p in param_rows(r) if p[0] not in (&quot;data pointer&quot;, &quot;LR&quot;)][:8],
+                               &quot;latency_ps&quot;: lat, &quot;latency&quot;: fmt_ps(lat), &quot;label&quot;: label_for(r, lat, p90, p99),
+                               &quot;steps&quot;: [{&quot;step&quot;: s_[&quot;step&quot;], &quot;owner&quot;: s_[&quot;owner&quot;], &quot;text&quot;: fmt_ps(s_[&quot;ps&quot;])} for s_ in steps_of(r)],
+                               &quot;status&quot;: status_words(tuple(r[&quot;status&quot;])) if r.get(&quot;status&quot;) else None,
+                               &quot;end&quot;: r.get(&quot;end&quot;), &quot;lost&quot;: r.get(&quot;lost&quot;), &quot;n_pieces&quot;: r.get(&quot;n_data&quot;),
+                               &quot;errors&quot;: r.get(&quot;_errs&quot;) or [], &quot;pieces&quot;: pieces_of(r)})
+    error_rows.sort(key=lambda x: x[&quot;inst&quot;] or 0)
+    # ---- the management view: per kind of command, how often it was called, how often it went wrong, which
+    #      parameters separate the failures, which packets sit behind them, the usual time against the limit, and
+    #      who is responsible by the specification&#x27;s own status definitions
+    management = []
+    for (is_io, opc), lst in sorted(groups.items(), key=lambda kv: (kv[0][0], -len(kv[1]))):
+        sqid0 = 1 if is_io else 0
+        name = opc_name(sqid0, opc)
+        cls = &quot;admin&quot; if sqid0 == 0 else &quot;io&quot;
+        bad = [r for r in lst if (r.get(&quot;status&quot;) and (r[&quot;status&quot;][0] or r[&quot;status&quot;][1])) or r.get(&quot;end&quot;) != &quot;cqe&quot; or r.get(&quot;_errs&quot;)]
+        if not bad:
+            continue
+        ok = [r for r in lst if r.get(&quot;end&quot;) == &quot;cqe&quot; and not (r[&quot;status&quot;][0] or r[&quot;status&quot;][1])]
+        lat_ok = [total_latency(r) for r in ok]
+        st_ok = stats(lat_ok)
+        lat_bad = [total_latency(r) for r in bad if r.get(&quot;end&quot;) == &quot;cqe&quot;]
+        failed = [r for r in lst if r.get(&quot;status&quot;) and (r[&quot;status&quot;][0] or r[&quot;status&quot;][1])]
+        lost = [r for r in lst if r.get(&quot;end&quot;) != &quot;cqe&quot;]
+        over = [r for r in lst if r.get(&quot;end&quot;) == &quot;cqe&quot; and total_latency(r) is not None and total_latency(r) &gt; HOST_LIMIT[cls]]
+        p99_ok = st_ok[&quot;p99&quot;] if st_ok else None
+        slow = [r for r in ok if p99_ok and total_latency(r) is not None and total_latency(r) &gt;= p99_ok and len(ok) &gt;= 20]
+        # statuses with who is responsible
+        st_counter = collections.Counter(tuple(r[&quot;status&quot;]) for r in failed)
+        statuses = []
+        for stt, cnt in st_counter.most_common():
+            side, reason = who_by_status(stt)
+            statuses.append({&quot;status&quot;: status_words(stt), &quot;count&quot;: cnt, &quot;side&quot;: side, &quot;reason&quot;: reason})
+        # parameter contrasts: which attribute values carry the failures
+        def attrs(r):
+            dw = (r.get(&quot;dw&quot;) or [0] * 6) + [0] * 6
+            a = []
+            if is_io and opc in (0x01, 0x02, 0x04, 0x05, 0x08, 0x0C, 0x7D):
+                a.append((&quot;FUA (Force Unit Access)&quot;, &quot;set&quot; if _bits(dw[2], 30, 30) else &quot;not set&quot;))
+                sz = next((lab for lab, lo, hi in SIZE_BUCKETS if (r.get(&quot;xfer&quot;) or 0) &gt;= lo and (hi is None or (r.get(&quot;xfer&quot;) or 0) &lt;= hi)), &quot;?&quot;)
+                a.append((&quot;transfer size&quot;, sz))
+                a.append((&quot;namespace&quot;, &quot;NSID %s&quot; % r.get(&quot;nsid&quot;)))
+                dsm = dw[3] &amp; 0xFF
+                if dsm:
+                    a.append((&quot;DSM access latency hint&quot;, ACCESS_LATENCY.get(_bits(dsm, 5, 4))))
+                if opc == 0x08:
+                    a.append((&quot;DEAC (deallocate)&quot;, &quot;set&quot; if _bits(dw[2], 25, 25) else &quot;not set&quot;))
+            elif is_io and opc == 0x09:
+                a.append((&quot;deallocate (AD)&quot;, &quot;set&quot; if _bits(dw[1], 2, 2) else &quot;not set&quot;))
+                a.append((&quot;ranges per command&quot;, str((dw[0] &amp; 0xFF) + 1)))
+            elif not is_io and opc in (0x09, 0x0A):
+                a.append((&quot;feature&quot;, FID_NAMES.get(dw[0] &amp; 0xFF, &quot;0x%02X&quot; % (dw[0] &amp; 0xFF))))
+            elif not is_io and opc == 0x02:
+                a.append((&quot;log page&quot;, LID_NAMES.get(dw[0] &amp; 0xFF, &quot;0x%02X&quot; % (dw[0] &amp; 0xFF))))
+            elif not is_io and opc == 0x06:
+                a.append((&quot;structure&quot;, CNS_NAMES.get(dw[0] &amp; 0xFF, &quot;0x%02X&quot; % (dw[0] &amp; 0xFF))))
+            elif not is_io and opc in (0x01, 0x05, 0x00, 0x04):
+                a.append((&quot;queue&quot;, &quot;QID %d&quot; % (dw[0] &amp; 0xFFFF)))
+            qd = r.get(&quot;qd&quot;)
+            if qd is not None:
+                a.append((&quot;queue depth at submission&quot;, next((lab for lab, lo, hi in QD_BUCKETS if qd &gt;= lo and (hi is None or qd &lt;= hi)), &quot;?&quot;)))
+            return a
+        tot = collections.Counter()
+        fail = collections.Counter()
+        badset = {(r[&quot;sqid&quot;], r[&quot;cid&quot;], r.get(&quot;inst&quot;)) for r in bad}
+        for r in lst:
+            for av in attrs(r):
+                tot[av] += 1
+                if (r[&quot;sqid&quot;], r[&quot;cid&quot;], r.get(&quot;inst&quot;)) in badset:
+                    fail[av] += 1
+        overall = len(bad) / len(lst)
+        contrasts = []
+        for av, n_tot in tot.items():
+            n_f = fail.get(av, 0)
+            if n_f == 0 or n_tot == 0:
+                continue
+            rate = n_f / n_tot
+            # the complement: the same attribute with any other value
+            others_tot = sum(v for k, v in tot.items() if k[0] == av[0] and k != av)
+            others_f = sum(v for k, v in fail.items() if k[0] == av[0] and k != av)
+            contrasts.append({&quot;attribute&quot;: av[0], &quot;value&quot;: av[1], &quot;failed&quot;: n_f, &quot;total&quot;: n_tot,
+                              &quot;rate&quot;: rate, &quot;share_of_failures&quot;: n_f / len(bad),
+                              &quot;others_failed&quot;: others_f, &quot;others_total&quot;: others_tot,
+                              &quot;lift&quot;: (rate / overall) if overall else None})
+        contrasts.sort(key=lambda c: (-c[&quot;share_of_failures&quot;], -(c[&quot;lift&quot;] or 0)))
+        separating = [c for c in contrasts if c[&quot;share_of_failures&quot;] &gt;= 0.5 and c[&quot;others_total&quot;] &gt;= 10 and
+                      (c[&quot;others_failed&quot;] / c[&quot;others_total&quot;]) &lt; c[&quot;rate&quot;] and (c[&quot;lift&quot;] or 0) &gt;= 1.5]
+        # LBA band and sizes of the failures
+        lba_note = None
+        if is_io and opc in (0x01, 0x02, 0x04, 0x05, 0x08, 0x0C, 0x7D):
+            sl = [r[&quot;slba&quot;] for r in bad if r.get(&quot;slba&quot;) is not None]
+            if sl:
+                nl = [r.get(&quot;nlb&quot;) or 0 for r in bad]
+                lba_note = {&quot;lba_min&quot;: min(sl), &quot;lba_max&quot;: max(s_ + n_ for s_, n_ in zip(sl, nl)),
+                            &quot;blocks&quot;: sorted({r.get(&quot;nlb&quot;) for r in bad}),
+                            &quot;all_lba_min&quot;: min(r[&quot;slba&quot;] for r in lst if r.get(&quot;slba&quot;) is not None),
+                            &quot;all_lba_max&quot;: max((r[&quot;slba&quot;] or 0) + (r.get(&quot;nlb&quot;) or 0) for r in lst)}
+        # packets behind the failures
+        pk = collections.Counter()
+        pk_ex = {}
+        for r in bad:
+            for e in r.get(&quot;_errs&quot;) or []:
+                pk[e[&quot;rule&quot;]] += 1
+                pk_ex.setdefault(e[&quot;rule&quot;], []).append(e[&quot;pkt&quot;])
+        packets = [{&quot;rule&quot;: k, &quot;text&quot;: RULES.get(k, {}).get(&quot;text&quot;, k), &quot;layer&quot;: RULES.get(k, {}).get(&quot;layer&quot;),
+                    &quot;count&quot;: n_, &quot;example_pkts&quot;: sorted(pk_ex[k])[:4]} for k, n_ in pk.most_common()]
+        defects = sorted({e[&quot;defect&quot;] for r in bad for e in (r.get(&quot;_errs&quot;) or []) if e.get(&quot;defect&quot;)})
+        sides = collections.Counter(st_[&quot;side&quot;] for st_ in statuses for _ in range(st_[&quot;count&quot;]) if st_[&quot;side&quot;])
+        ci = wilson(len(bad), len(lst))
+        facts = {
+            &quot;kind&quot;: name, &quot;klass&quot;: &quot;admin&quot; if sqid0 == 0 else &quot;I/O&quot;, &quot;opcode&quot;: &quot;0x%02X&quot; % opc,
+            &quot;called&quot;: len(lst), &quot;went_wrong&quot;: len(bad), &quot;rate&quot;: len(bad) / len(lst), &quot;rate_ci&quot;: ci,
+            &quot;failed_status&quot;: len(failed), &quot;never_completed&quot;: len(lost), &quot;packet_errors_on_successful&quot;: len([r for r in bad if r not in failed and r not in lost]),
+            &quot;over_host_limit&quot;: len(over), &quot;slowest_1pct_of_successful&quot;: len(slow),
+            &quot;statuses&quot;: statuses, &quot;responsible&quot;: dict(sides.most_common()),
+            &quot;contrasts&quot;: contrasts[:8], &quot;separating&quot;: separating[:3], &quot;lba&quot;: lba_note,
+            &quot;packets&quot;: packets, &quot;defects&quot;: defects,
+            &quot;timing&quot;: {&quot;usual_successful&quot;: fmt_ps(st_ok[&quot;p50&quot;]) if st_ok else None, &quot;usual_successful_ps&quot;: st_ok[&quot;p50&quot;] if st_ok else None,
+                       &quot;successful_n&quot;: len(ok), &quot;failed_min&quot;: fmt_ps(min(lat_bad)) if lat_bad else None, &quot;failed_max&quot;: fmt_ps(max(lat_bad)) if lat_bad else None,
+                       &quot;host_limit_s&quot;: HOST_LIMIT[cls] // SEC, &quot;spec_note&quot;: (&quot;the NVMe specification sets no completion time for %s&quot; % name) if not (sqid0 == 0 and opc in LONG_BY_NATURE) else (&quot;%s is long by nature: %s&quot; % (name, LONG_BY_NATURE_NOTE))},
+        }
+        facts[&quot;lines&quot;] = management_lines(facts)
+        management.append(facts)
+    management.sort(key=lambda m: (-m[&quot;went_wrong&quot;], -m[&quot;rate&quot;]))
+    # ---- controller-level events that are not commands (budgets from the specification)
+    reg = collections.Counter(f[2] for f in findings if f[2].startswith(&quot;REG.&quot;) or f[2] in (&quot;PM.RESUME_SLOW&quot;,))
+    controller = [{&quot;rule&quot;: k, &quot;count&quot;: n, &quot;text&quot;: RULES.get(k, {}).get(&quot;text&quot;, k), &quot;spec&quot;: RULES.get(k, {}).get(&quot;spec&quot;, &quot;&quot;)}
+                  for k, n in reg.most_common()]
+    summary = {
+        &quot;n_commands&quot;: len(recs), &quot;n_types&quot;: len(types),
+        &quot;n_admin&quot;: sum(1 for r in recs if r[&quot;sqid&quot;] == 0), &quot;n_io&quot;: sum(1 for r in recs if r[&quot;sqid&quot;] != 0),
+        &quot;n_not_completed&quot;: sum(1 for r in recs if r.get(&quot;end&quot;) != &quot;cqe&quot;),
+        &quot;n_with_errors&quot;: sum(1 for r in recs if r.get(&quot;_errs&quot;)),
+        &quot;types&quot;: types,
+        &quot;error_rows&quot;: error_rows[:3000], &quot;n_error_rows&quot;: len(error_rows),
+        &quot;management&quot;: management,
+        &quot;management_basis&quot;: {&quot;rate&quot;: &quot;went wrong = failed status, never completed, or a packet-level error under it; the interval is the Wilson 95 % interval of the rate&quot;,
+                             &quot;responsible&quot;: WHO_BASIS,
+                             &quot;contrast&quot;: &quot;an attribute value &#x27;separates&#x27; the failures when it carries at least half of them and its failure rate is above the rate of the other values of the same attribute; it is an association in this capture, not a proven cause&quot;,
+                             &quot;timing&quot;: &quot;usual = median of the successful commands of the same kind in this capture; the limit is the host driver&#x27;s; &quot; + HOST_LIMIT_SOURCE},
+        &quot;error_kinds&quot;: [{&quot;kind&quot;: k, &quot;count&quot;: n} for k, n in error_kinds.most_common()],
+        &quot;intervals_ms&quot;: {k: bucket_counts(v, INTERVAL_BUCKETS, MS) for k, v in intervals.items()},
+        &quot;host_gaps&quot;: {k: stats(v) for k, v in host_gaps.items()},
+        &quot;host_gaps_text&quot;: {k: {kk: fmt_ps(vv) for kk, vv in (stats(v) or {}).items() if kk != &quot;n&quot;} for k, v in host_gaps.items()},
+        &quot;controller_events&quot;: controller,
+        &quot;basis&quot;: {
+            &quot;parameters&quot;: &quot;decoded from the submission entry as NVMe Base 2.0 chapter 5 (admin) and NVM Command Set 1.0 &quot;
+                          &quot;section 3.2 (I/O) define the fields; LBA data size from Identify Namespace LBADS&quot;,
+            &quot;latency&quot;: &quot;measured from the capture timestamps: doorbell write, entry fetch, first and last data packet, &quot;
+                       &quot;completion entry; step owners from the NVMe queue model (Base 2.0 section 3.3)&quot;,
+            &quot;labels&quot;: &quot;over the limit: &quot; + HOST_LIMIT_SOURCE + &quot;; slowest 1 % / 10 %: the command is at or above the &quot;
+                      &quot;99th / 90th percentile of its own kind in this capture; typical: below the 90th percentile; &quot;
+                      &quot;long by nature: &quot; + LONG_BY_NATURE_NOTE,
+            &quot;errors&quot;: &quot;findings of the stage 1 rules that carry the command&#x27;s identity (SQID, CID, submission packet) &quot;
+                      &quot;or sit on one of the command&#x27;s own packets (doorbell, fetch, entry, data packets, completion); &quot;
+                      &quot;each names the defect it was grouped into&quot;,
+            &quot;buckets&quot;: &quot;bucket edges as in the driver team&#x27;s Trace Vision tables, for comparison&quot;,
+            &quot;no_payload&quot;: &quot;when the DATA column holds only sizes, no command can be decoded and this page is empty&quot;},
+    }
+    json.dump(summary, open(os.path.join(run_dir, &quot;command_summary.json&quot;), &quot;w&quot;), indent=1)
+    with open(os.path.join(run_dir, &quot;command_rows.jsonl&quot;), &quot;w&quot;) as f:
+        for row in all_rows:
+            f.write(json.dumps(row, separators=(&quot;,&quot;, &quot;:&quot;)) + &quot;\n&quot;)
+    print(&quot;commands: %d commands, %d kinds, %d with errors, %d not completed -&gt; %s&quot; %
+          (summary[&quot;n_commands&quot;], summary[&quot;n_types&quot;], summary[&quot;n_with_errors&quot;], summary[&quot;n_not_completed&quot;],
+           os.path.join(run_dir, &quot;command_summary.json&quot;)), flush=True)
+    return summary</code></pre></figure>
 </li>
 <li><b>Reuse AI reviewer verdicts from earlier runs</b> (pattern cache, a store of earlier answers). For each defect the step builds a key from these things. The error type, the first rule, the family and the layer. The set of rules, and the order of packet kinds in its rows. The AI model, and the version of the prompt (the question sent to the AI). If that key was confirmed before, the step writes the stored verdict for this defect. It calls no model. A new model or a new prompt gives a new key. So old verdicts are never used for a new model.
 <figure class="code"><figcaption><span class="file">app/pattern_cache.py</span> lines 41–50 · pattern_key()</figcaption><pre><code>def pattern_key(inc, blocks, model, pver):
@@ -763,10 +1176,96 @@ The rule's line in the rule table gives its tier (what kind of check it is). It 
 <figure class="shot"><img src="guide_images/defects_found.jpg" alt="Defects found in this trace"><figcaption>One row per defect. An open row shows "What this means", "Where", "Why it was flagged" and "Who". It also shows "Host evidence" and the AI reviewer's summary.</figcaption></figure>
 <p>Each row shows <b>Defect N</b> and the error type written out. Next comes the verdict badge (<span class="tag ok">✓ Confirmed</span> <span class="tag warn">? Suspect</span> <span class="tag">! Needs evidence</span>). Then the AI reviewer badge, whether the verdict came from the cache, and the packet range. When you open the row, you see more. It shows the error family and the layer. It shows the first packet that went wrong (on the screen: "first abnormal packet"). It shows the rule that fired there, with its detail ("MMIO read 0x1C 2.000 ms after D3hot→D0"). Here MMIO means reading the drive's registers as if they were memory. D3hot→D0 means waking up from deep sleep. It shows why the defect was flagged: each rule with ✓ and its role. It shows who caused it, and which R-rule decided that. It says whether host evidence was needed. It gives the AI reviewer's verdict and summary. Last, it links to the full record (section 6.2).</p>
 
+
+<h3>5.4 Step 3 · NVMe commands</h3>
+<figure class="shot"><img src="guide_images/commands.jpg" alt="Step 3: the errors found under NVMe commands"><figcaption>Step 3. The chips name every kind of error found; each row ties one failed command to the parameters it carried, the time it took step by step, and the packets that went wrong under it; the opened row shows the command piece by piece.</figcaption></figure>
+<p>The first block of the third step is for the team lead: one line per kind of command that went wrong, with how often it was called and failed (and the 95 % interval of that rate), who the specification points at by the status codes returned (NVMe Base 2.0 section 4.2 assigns each code to the host or the device), which parameter values the failures share (an association in this capture, never a cause), the packets behind them, and the usual time against the failed time and the host's limit. A short narrative sits on top; when the AI reviewer wrote it, the code checked that every number and side in it is in the facts and that it asserts no cause of its own, else the fact-built sentences are shown.</p>
+<p>Under it, the step leads with the errors found under NVMe commands: one row per command that failed, never completed, or had a low-level PCIe packet go wrong under it. The four columns of a row belong together and are read left to right. A strip of chips above the table names each kind of error found and filters the rows. A folded table under it lists every command by kind, with the same four columns as statistics.</p>
+<table class="tbl"><tr><th>Column</th><th>What it holds</th><th>Where it comes from</th></tr>
+<tr><td>NVMe command</td><td>admin or I/O, the name and opcode, how many were seen, how many never completed, the completion statuses named as the specification names them</td><td>the submission entry (opcode, command id, queue) and the completion entry (status); NVMe Base 2.0 sections 4.1 and 4.2</td></tr>
+<tr><td>Parameters the command carries</td><td>the fields the specification defines for that opcode and the values seen: namespace, starting LBA, number of blocks, bytes, Force Unit Access, the DSM hints, trim ranges, feature names, log names, queue sizes …</td><td>command dwords 10 to 15, decoded as NVMe Base 2.0 chapter 5 (admin) and NVM Command Set 1.0 section 3.2 (I/O) define them; the source is printed on every row</td></tr>
+<tr><td>Latency, measured, with its label</td><td>median, the start of the slowest 10 % and 1 %, the longest; each step: doorbell to fetch, fetch to first data, data phase, last data to completion, doorbell to completion; how many were over the host's limit</td><td>the capture's own timestamps. The NVMe specification sets no per-command limit, so "over the host's limit" uses the Linux driver's 30 s (I/O) and 60 s (admin); "slowest 1 % / 10 %" is a rank among the same kind in this capture; "long by nature" marks Format, Sanitize, Self-test and Firmware commands</td></tr>
+<tr><td>Low-level PCIe packets and errors under it</td><td>every finding that belongs to the command, with its packet number and the defect it was grouped into</td><td>a finding belongs to a command when it carries the command's identity (queue, command id, submission packet) or sits on one of the command's own packets; nothing is attached by closeness in time</td></tr>
+</table>
+<p>Click an error row, or a command in the folded table, for its parameters, each step, each <b>piece</b> of its transfer (one data packet with the LBA it starts at, its bytes, its time after the fetch and the errors on that packet) and its errors. "Download every command as a CSV file" gives one row per command with every step time. The lower card shows the command intervals, the host gap after a completion and the controller-level events that are not commands, with the bucket edges of the driver team's Trace Vision tables so the two can be compared.</p>
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/commands.py</span> lines 570–584 · label_for()</figcaption><pre><code>def label_for(rec, lat, p90, p99):
+    cls = &quot;admin&quot; if rec[&quot;sqid&quot;] == 0 else &quot;io&quot;
+    if rec.get(&quot;end&quot;) != &quot;cqe&quot;:
+        return &quot;no completion (%s)&quot; % (rec.get(&quot;lost&quot;) or rec.get(&quot;end&quot;))
+    if lat is None:
+        return &quot;not measurable (no doorbell or fetch time in the capture)&quot;
+    if lat &gt; HOST_LIMIT[cls]:
+        return &quot;over the host&#x27;s limit (%d s)&quot; % (HOST_LIMIT[cls] // SEC)
+    if rec[&quot;sqid&quot;] == 0 and rec[&quot;opc&quot;] in LONG_BY_NATURE:
+        return &quot;long by nature&quot;
+    if p99 is not None and lat &gt;= p99 and p99 &gt; 0:
+        return &quot;slowest 1 % of its kind in this capture&quot;
+    if p90 is not None and lat &gt;= p90 and p90 &gt; 0:
+        return &quot;slowest 10 % of its kind in this capture&quot;
+    return &quot;typical for its kind in this capture&quot;</code></pre></figure>
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/commands.py</span> lines 544–567 · errors_for()</figcaption><pre><code>def errors_for(rec, by_pkt, by_cmd, defects):
+    &quot;&quot;&quot;Findings that belong to this command: the ones carrying its identity key, and the ones on its own packets.&quot;&quot;&quot;
+    inst = rec.get(&quot;inst&quot;)
+    seen, out = set(), []
+    cands = list(by_cmd.get((rec[&quot;sqid&quot;], rec[&quot;cid&quot;], inst), []))
+    pk = [rec.get(k) for k in (&quot;pkt_db&quot;, &quot;pkt_fetch&quot;, &quot;pkt_sqe&quot;, &quot;pkt_cqe&quot;, &quot;end_pkt&quot;)]
+    pk += [x[0] for x in (rec.get(&quot;pkts&quot;) or [])]
+    for p in pk:
+        if p is not None:
+            cands += by_pkt.get(p, [])
+    for f in cands:
+        key = (f[0], f[2])
+        if key in seen:
+            continue
+        seen.add(key)
+        rd = RULES.get(f[2], {})
+        if rd.get(&quot;level&quot;) != &quot;DEFECT&quot; or rd.get(&quot;tier&quot;) == &quot;S&quot;:
+            continue                      # context rows (queue created, reset) and statistics are not errors
+        d = defects.get(f[0])
+        out.append({&quot;pkt&quot;: f[0], &quot;rule&quot;: f[2], &quot;text&quot;: RULES.get(f[2], {}).get(&quot;text&quot;, f[2]),
+                    &quot;layer&quot;: RULES.get(f[2], {}).get(&quot;layer&quot;), &quot;detail&quot;: f[4][:200],
+                    &quot;defect&quot;: d[0] if d else None, &quot;defect_rules&quot;: d[1] if d else None})
+    out.sort(key=lambda e: e[&quot;pkt&quot;])
+    return out</code></pre></figure>
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/commands.py</span> lines 132–144 · who_by_status()</figcaption><pre><code>def who_by_status(status):
+    &quot;&quot;&quot;(side, plain reason) for a failed status, by the specification&#x27;s definition of the code.&quot;&quot;&quot;
+    if not status:
+        return None, None
+    sct, sc, _ = status
+    if sct == 0 and sc == 0:
+        return None, None
+    table = {0: WHO_GENERIC, 1: WHO_SPECIFIC, 2: WHO_MEDIA}.get(sct)
+    if sct == 3:
+        return &quot;platform&quot;, &quot;a path or fabric problem&quot;
+    if table and sc in table:
+        return table[sc]
+    return &quot;undetermined&quot;, &quot;a status code the page has no plain words for&quot;</code></pre></figure>
+<figure class="code"><figcaption><span class="file">stage1/pcie_isolate/command_narrative.py</span> lines 65–86 · check()</figcaption><pre><code>def check(answer, facts):
+    &quot;&quot;&quot;True when every number in the answer appears in the facts (compared as values, so 08 = 8 and 5 = 5.0),
+    no side is named that the facts never mention, no cause is asserted, and the text is short.&quot;&quot;&quot;
+    text = &quot; &quot;.join(str(answer.get(k, &quot;&quot;)) for k in (&quot;headline&quot;, &quot;what_happens&quot;, &quot;tell_the_team&quot;))
+    allowed = {_num(x) for x in numbers_in(facts)} - {None}
+    for n in NUM_RX.findall(text):
+        v = _num(n)
+        if v is None or v not in allowed:
+            return False, &quot;number %s is not in the facts&quot; % n
+    facts_text = json.dumps(facts).lower()
+    for side in (&quot;host&quot;, &quot;device&quot;, &quot;link&quot;, &quot;platform&quot;):
+        if re.search(r&quot;\b%s\b&quot; % side, text, re.I) and side not in facts_text:
+            return False, &quot;names a side the facts do not: %s&quot; % side
+    if len(text.split()) &gt; 200:
+        return False, &quot;too long&quot;
+    # the facts only ever establish associations and the specification&#x27;s assignment of a status code; an answer
+    # that asserts a cause of its own is not grounded
+    for phrase in (&quot;caused by&quot;, &quot;the cause is&quot;, &quot;root cause&quot;, &quot;because the firmware&quot;, &quot;bug in&quot;, &quot;is the cause&quot;,
+                   &quot;due to a bug&quot;, &quot;faulty&quot;, &quot;defective&quot;):
+        if phrase in text.lower():
+            return False, &quot;asserts a cause the facts do not establish (%r)&quot; % phrase
+    return True, &quot;ok&quot;</code></pre></figure>
 <!-- ============================================================== 6 -->
-<h2 id="s6">6. Step 3 · Defects found, and the defect page</h2>
+<h2 id="s6">6. Step 5 · Defects found, and the defect page</h2>
 <h3>6.1 The defects table</h3>
-<p>Step 3 shows the same defects as a table. Its first columns are <b>Defect</b>, <b>Error type</b>, <b>Verdict</b> and <b>Where</b> (layer). Next comes <b>Who</b> (host side, device side, platform, link, test setup). Then come <b>Packets</b> (range) and <b>AI reviewer</b>. Once stage 2 has started, there is one more column: <b>Stage 2 state</b>. The <b>Filter</b> box keeps only the rows that hold the text you type. That text can be a defect number, an error type, a rule or a verdict word. The filter works in the browser and sends nothing. <b>Continue to stage 2</b> opens step 4. After stage 2 has started, a click on a row opens that defect in step 4. Data: <code>GET /api/runs/&lt;run&gt;/incidents</code> → <code>Services.incidents_of</code>. That function reads <code>incidents.json</code>, <code>isolation.json</code> and <code>llm_reviews.jsonl</code> of the run.</p>
+<p>Step 4 shows the same defects as a table. Its first columns are <b>Defect</b>, <b>Error type</b>, <b>Verdict</b> and <b>Where</b> (layer). Next comes <b>Who</b> (host side, device side, platform, link, test setup). Then come <b>Packets</b> (range) and <b>AI reviewer</b>. Once stage 2 has started, there is one more column: <b>Stage 2 state</b>. The <b>Filter</b> box keeps only the rows that hold the text you type. That text can be a defect number, an error type, a rule or a verdict word. The filter works in the browser and sends nothing. <b>Continue to stage 2</b> opens step 5. After stage 2 has started, a click on a row opens that defect in step 5. Data: <code>GET /api/runs/&lt;run&gt;/incidents</code> → <code>Services.incidents_of</code>. That function reads <code>incidents.json</code>, <code>isolation.json</code> and <code>llm_reviews.jsonl</code> of the run.</p>
 
 <h3>6.2 The defect page: the full record of one defect</h3>
 <p>The link "Open the full record ↗" opens this page (address <code>/defect?run=&lt;run&gt;&amp;inc=&lt;defect&gt;</code>). You can only read it, not change it. It loads everything with one request, <code>GET /api/runs/&lt;run&gt;/defect/&lt;defect&gt;</code> (<code>defect_record</code> in <code>stage2_api.py</code>). It has eight sections. Here they are in the order a newcomer reads them:</p>
@@ -785,10 +1284,10 @@ The rule's line in the rule table gives its tier (what kind of check it is). It 
 <figure class="shot tall"><img src="guide_images/defect_page_3.jpg" alt="Defect page, sections 7 and 8"><figcaption>Sections 7 and 8: the stage-2 summary and the decision history.</figcaption></figure>
 
 <!-- ============================================================== 7 -->
-<h2 id="s7">7. Step 4 · Reproduce and decide (stage 2): the main screen</h2>
+<h2 id="s7">7. Step 5 · Reproduce and decide (stage 2): the main screen</h2>
 
 <h3>7.1 Start stage 2</h3>
-<p>The first time you open step 4 for a run, it shows a short explanation and the button <b>Start stage 2</b>. Stage 2 never starts by itself. It asks the AI reviewer once for each defect, and that costs time and money. The button sends <code>POST /api/runs/&lt;run&gt;/stage2/start</code>. The server then writes the marker file <code>runs/&lt;run&gt;/stage2/STARTED</code>. It also starts a "prepare" job that does the lookup for each defect in turn. So when you open a defect, its lookup is ready. The bar shows "preparing: Defect 2 (2 of 3)".</p>
+<p>The first time you open step 5 for a run, it shows a short explanation and the button <b>Start stage 2</b>. Stage 2 never starts by itself. It asks the AI reviewer once for each defect, and that costs time and money. The button sends <code>POST /api/runs/&lt;run&gt;/stage2/start</code>. The server then writes the marker file <code>runs/&lt;run&gt;/stage2/STARTED</code>. It also starts a "prepare" job that does the lookup for each defect in turn. So when you open a defect, its lookup is ready. The bar shows "preparing: Defect 2 (2 of 3)".</p>
 <p><code>Stage2V3.present</code> does the lookup of one defect ("present"). It works in this order. It records that the error type was seen (event <code>incident_seen</code>). It builds a search question from the defect. It searches the knowledge base in five ways (section 11). It decides "seen before". It records which candidates (the records it offers) were shown (event <code>impression</code>). This record is needed later, to judge the ranking fairly. It collects the evidence rows. Last, it builds the card with the AI reviewer's proposal (<code>build_card</code> in <code>stage2/presenter.py</code>). The result is kept in the defect's state file. So it is not worked out again until you decide something.</p>
 <figure class="code"><figcaption><span class="file">stage2/stage2_v3.py</span> lines 99–130 · Stage2V3.present()</figcaption><pre><code>    def present(self, inc, firmware=None, device=None):
         &quot;&quot;&quot;device: {&quot;name&quot;, &quot;model_number&quot;, &quot;serial_number&quot;, &quot;firmware_revision&quot;, &quot;pci&quot;, &quot;source&quot;} or None. The context
@@ -1047,7 +1546,7 @@ def act(run_id, inc_id):
 </table></div>
 
 <!-- ============================================================== 8 -->
-<h2 id="s8">8. Step 4 · "All details": every one of the 26 decisions</h2>
+<h2 id="s8">8. Step 5 · "All details": every one of the 26 decisions</h2>
 <p>The main screen covers the everyday decisions. Everything else is behind <b>All details (the AI reviewer's explanation, candidates, every admin action, history, editor)</b> at the bottom. It has three tabs: <b>Candidates &amp; actions</b>, <b>Stage 1 evidence</b>, <b>Result</b>.</p>
 
 <h3>8.1 Saved procedure next to the AI reviewer's proposal</h3>
@@ -1067,7 +1566,7 @@ def act(run_id, inc_id):
 <figure class="shot"><img src="guide_images/actions_step2.jpg" alt="Step 2 of the decision form: the actions"><figcaption>Step 2: each decision is a tile that says what it does and what it needs.</figcaption></figure>
 <ol class="steps">
 <li><b>Which record is the decision about?</b> Tick one record. Tick two for Prefer, Tie and Mark as a duplicate. Decisions about the defect as a whole need none (Skip, Record a lesson, Generate test cases …).</li>
-<li><b>What do you want to do?</b> Click a tile. Small tags on the tile say what it needs. A tag can say "needs one ticked record" or "needs two ticked records". It can say "needs an order (click the candidates)" or "asks for a reason". It can say "needs a second admin" or "asks which decision". The tag "runs in the lab, takes minutes" warns you that it takes time. Green tiles add credit. Red tiles take it away. Yellow tiles need two people. The tile Add a procedure does not go to step 3. It opens the editor of section 8.5.</li>
+<li><b>What do you want to do?</b> Click a tile. Small tags on the tile say what it needs. A tag can say "needs one ticked record" or "needs two ticked records". It can say "needs an order (click the candidates)" or "asks for a reason". It can say "needs a second admin" or "asks which decision". The tag "runs in the lab, takes minutes" warns you that it takes time. Green tiles add credit. Red tiles take it away. Yellow tiles need two people. The tile Add a procedure does not go to step 4. It opens the editor of section 8.5.</li>
 <li><b>Confirm.</b> This step shows the decision, what it means and what happens next. It shows only the fields that this decision needs. These can be the reason, a note and your name (filled in for you). They can also be the second admin's name, the event number to undo, or the text of your change. <b>Record this decision</b> stays switched off until everything needed is filled in ("Before recording: say why"). The second admin must be a different person from you. The second admin's name is sent only with Approve as second admin, Retire the procedure, and Approve the deletion. After that one decision, the name box is emptied. So a name counts for one decision only.</li>
 </ol>
 <figure class="code"><figcaption><span class="file">app/static/js/review.js</span> lines 28–33 · JavaScript in the browser</figcaption><pre><code>const NEED = { one: [&quot;accept&quot;, &quot;accept_with_note&quot;, &quot;revise&quot;, &quot;reject&quot;, &quot;not_reproducible&quot;, &quot;promote&quot;, &quot;deprecate&quot;, &quot;delete_request&quot;, &quot;delete_approve&quot;, &quot;split&quot;, &quot;link&quot;, &quot;restart_failed&quot;],
@@ -1843,7 +2342,7 @@ FIRST_LEVEL_TRIAGE_S = 600     # &quot;&gt; 10 mins (first level triage) is fail
         return &quot;new&quot;, best, best[&quot;fused&quot;]</code></pre></figure>
 
 <!-- ============================================================== 12 -->
-<h2 id="s12">12. Step 5 · Report and tests, the Knowledge base page, Settings, Help</h2>
+<h2 id="s12">12. Step 6 · Report and tests, the Knowledge base page, Settings, Help</h2>
 
 <h3>12.1 Report and tests</h3>
 <figure class="shot tall"><img src="guide_images/report.jpg" alt="Report page"><figcaption>Key results for all runs and the times of this run. A table for each defect, and the tests the program made.</figcaption></figure>
